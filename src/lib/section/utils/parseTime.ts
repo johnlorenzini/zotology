@@ -1,5 +1,5 @@
 export interface ParsedTime {
-  days: number[];
+  days: number[] /* M-F = 1-5 */;
   start: string /* hh:mm */;
   end: string /* hh:mm */;
 }
@@ -8,9 +8,6 @@ export interface ParsedTime {
 // Example Time: 'TuTh   9:30-10:50'
 // Example Time: 'MWF   8:00- 9:20'
 // Example Time: 'MTuWThF   12:00-12:50p'
-
-// 'MW   2:30- 3:50p	'
-// 'MW   4:00- 4:50p	'
 
 const convertTime12to24 = (time12h: string, isPM: string) => {
   const [start, end] = time12h.split(" ");
