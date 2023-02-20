@@ -4,6 +4,21 @@ import "./globals.css";
 import SupabaseListener from "@/lib/supabase/components/supabase-listener";
 import SupabaseProvider from "@/lib/supabase/components/supabase-provider";
 import { createClient } from "@/lib/supabase/utils/supabase-server";
+import { Inter, Bitter } from "@next/font/google";
+import cn from "classnames";
+import Header from "./Header";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const bitter = Bitter({
+  subsets: ["latin"],
+  variable: "--font-title",
+  display: "swap",
+});
 
 // do not cache this layout
 export const revalidate = 0;
@@ -26,7 +41,8 @@ export default async function RootLayout({
       head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
     */}
       <head />
-      <body>
+      <body className={cn(inter.variable, bitter.variable)}>
+        <Header />
         <SupabaseProvider>
           <SupabaseListener serverAccessToken={session?.access_token} />
           {children}
