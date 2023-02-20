@@ -60,7 +60,7 @@ const Nav = ({ items }: MainNavProps) => {
               </Link>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator style={{textDecorationColor: "white"}} />
           {items?.map(
             (item, index) =>
               item.href && (

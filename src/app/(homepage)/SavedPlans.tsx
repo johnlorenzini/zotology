@@ -14,9 +14,6 @@ const SavedPlans = (props: Props) => {
       <h2 className="text-2xl font-semibold font-title text-cardtitle">
         My Plans
       </h2>
-      <span className="flex items-center gap-1 font-light">
-        Click <Circle className="text-gray-500" /> to auto-enroll a schedule.
-      </span>
       <div className="flex flex-col w-full gap-2 pt-2 pb-4 overflow-y-scroll scrollbar-hide">
         {sampleCards.map((title, index) => {
           return (
