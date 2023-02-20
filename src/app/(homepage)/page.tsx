@@ -24,22 +24,22 @@ export default function Home() {
       date: "Feb 30",
       event: "ur mom comes to uci",
     },
-    {
-      date: "Feb 5",
-      event: "View Date and Time of ",
-    },
-    {
-      date: "Feb 6",
-      event: "Waitlist Release",
-    },
-    {
-      date: "Feb 7",
-      event: "View Date and Time of ",
-    },
-    {
-      date: "Feb 30",
-      event: "ur mom comes to uci",
-    },
+    // {
+    //   date: "Feb 5",
+    //   event: "View Date and Time of ",
+    // },
+    // {
+    //   date: "Feb 6",
+    //   event: "Waitlist Release",
+    // },
+    // {
+    //   date: "Feb 7",
+    //   event: "View Date and Time of ",
+    // },
+    // {
+    //   date: "Feb 30",
+    //   event: "ur mom comes to uci",
+    // },
   ];
 
   return (

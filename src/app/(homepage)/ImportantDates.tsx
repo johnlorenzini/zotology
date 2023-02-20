@@ -18,15 +18,15 @@ const ImportantDates = ({ dateArray }: Props) => {
       {/* Timeline container */}
       <div className="relative w-full h-full">
         {/* Timeline content */}
-        <div className="relative w-full h-full flex justify-start px-10 overflow-y-scroll scrollbar-hide">
+        <div className="relative w-full h-full flex justify-start px-2 sm:px-10 overflow-y-scroll scrollbar-hide">
           {/* Timeline bar */}
-          <div className="z-0 absolute w-[2px] left-[9rem] top-6 h-full translate-x-[-40%] bg-gradient-to-b from-uciyellow to-[#f78d2d]" />
+          <div className="z-0 absolute w-[2px] left-[5rem] sm:left-[9rem] top-6 h-full translate-x-[-40%] bg-gradient-to-b from-uciyellow to-[#f78d2d]" />
           <ol className="w-full h-full z-0">
             {dateArray.map(({ date, event }: DateEvent, index): any => {
               return (
                 <li
                   key={index}
-                  className="h-10 z-10 relative grid grid-cols-[5rem_3rem_auto] items-center my-2"
+                  className="h-10 z-10 relative grid grid-cols-[3.5rem_2rem_auto] sm:grid-cols-[5rem_3rem_auto] items-center my-2"
                 >
                   {/* Render date */}
                   {

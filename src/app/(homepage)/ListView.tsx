@@ -34,16 +34,16 @@ const ListView = ({events, waitlist}: Props) => {
 									<h4 className="text-xl font-semibold">{course}</h4>
 									<span className=" text-uciblue">Final: Apr 1, 2023 8:00AM - 10:20AM{finalDate}</span>
 									<table className="w-full text-left mt-2">
-										<thead className="py-2 bg-uciblue rounded-lg text-white text-semibold">
-											<tr className="">
-												<th className="py-1"></th>
+										<thead className="">
+											<tr className="py-2 bg-uciblue text-white text-semibold">
+												<th className="py-1 rounded-l-sm overflow-hidden"></th>
 												<th className="py-1">Code</th>
 												<th className="py-1">Type</th>
 												<th className="py-1">Location</th>
 												<th className="py-1">Time</th>
 												<th className="py-1">Instructor</th>
 												<th className="py-1">Units</th>
-												<th className="py-1"></th>
+												<th className="py-1 rounded-r-sm overflow-hidden"></th>
 											</tr>
 										</thead>
 										<tbody>

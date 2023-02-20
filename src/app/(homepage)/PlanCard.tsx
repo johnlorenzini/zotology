@@ -18,7 +18,7 @@ const PlanCard = ({ title, cardId, units, term }: Props) => {
       </h3>
       <h4 className="self-start text-md text-gray-600">{term}</h4>
 
-      <div className=" text-md pt-6 pb-2 relative flex justify-between w-full">
+      <div className=" text-md pt-6 pb-2 text-gray-600 relative flex justify-between w-full">
         <span>{units} Units</span>
         <Link href="/plan">
           <ArrowRight className="text-lg text-cardtitle" />
