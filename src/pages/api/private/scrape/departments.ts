@@ -41,7 +41,7 @@ export default async function handler(
         {
           name: course.department_name ?? null,
           code: course.department ?? null,
-          schoolId: schoolsMap.get(course.school) ?? null,
+          school_id: schoolsMap.get(course.school) ?? null,
         },
       ])
     ).values()
