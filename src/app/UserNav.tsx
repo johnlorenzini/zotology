@@ -49,13 +49,12 @@ const UserNav = () => {
 
     signInWithGoogle();
   }
-
-  return (
+  return( <>{user ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex gap-1 px-1 text-base hover:bg-transparent"
+          className="flex gap-1 px-1 text-base hover:bg-transparent rounded-xl"
         >
           <CgProfile className="text-xl text-white" />
           <span className="items-center text-sm font-medium text-white hover:underline">
@@ -101,6 +100,10 @@ const UserNav = () => {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  ) : (
+    <Button onClick={login} className="rounded-xl text-white hover:text-uciblue bg-transparent hover:bg-white p-2">Sign In</Button>
+  )}
+  </>
   );
 };
 

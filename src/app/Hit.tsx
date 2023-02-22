@@ -42,15 +42,16 @@ const Hit = ({ hit } : props) => {
         </table>
       </AccordionTrigger>
       <AccordionContent>
+        {sections && Object.keys(sections).length > 0 ?
         <div className="pb-4 overflow-auto">
           <table className="w-full min-w-[750px]">
             <thead>
               <tr className="border-b-2 border-cardtitle text-cardtitle">
                 <th>Code</th>
                 <th>Type</th>
-                <th>Instructor</th>
-                <th>Date/Time</th>
                 <th>Location</th>
+                <th>Date/Time</th>
+                <th>Instructor</th>
                 <th>Enrollment</th>
                 <th>Add?</th>
               </tr>
@@ -77,8 +78,8 @@ const Hit = ({ hit } : props) => {
                   }: any,
                   i: any
                 ) => (
-                  <tr className="font-medium " key={sectionCode}>
-                    <td>
+                  <tr className="font-medium" key={sectionCode}>
+                    <td className="p-1">
                       <Highlight
                         attribute={`sections.${i}.sectionCode`}
                         hit={hit}
@@ -94,11 +95,11 @@ const Hit = ({ hit } : props) => {
                         {sectionType}
                       </Highlight>
                     </td>
-                    <td>{instructors[0]}</td>
+                    <td>{meetings[0]?.bldg}</td> 
                     <td>
                       {meetings[0]?.days} {meetings[0]?.time}
                     </td>
-                    <td>{meetings[0]?.bldg}</td>
+                    <td>{instructors[0]}</td>
                     <td>
                       {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                     </td>
@@ -123,6 +124,7 @@ const Hit = ({ hit } : props) => {
             </tbody>
           </table>
         </div>
+        : <div className="flex items-center py-8 gap-2 flex-col"><div className="text-xl text-left text-cardtitle font-bold uppercase">No sections found for Spring 2023</div><button className="p-2 bg-uciblue text-white font-bold rounded-full hover:bg-cardtitle transition ease-in-out">Add to Wishlist?</button></div>}
       </AccordionContent>
     </AccordionItem>
   )
