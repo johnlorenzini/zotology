@@ -1,9 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@alexanderliu/cheerio-table-parser': link:../cheerio-table-parser
+  '@alexanderliu/cheerio-table-parser': ^2.0.2
   '@next/font': 13.1.6
-  '@pedroentringer/cheerio-table-parser': ^2.0.0
   '@radix-ui/colors': ^0.1.8
   '@radix-ui/react-avatar': ^1.0.1
   '@radix-ui/react-dropdown-menu': ^2.0.2
@@ -36,18 +35,18 @@ specifiers:
   postcss: ^8.4.21
   react: 18.2.0
   react-dom: 18.2.0
+  react-icons: ^4.7.1
   server-only: ^0.0.1
   supabase: ^1.38.6
-  tailwind-merge: ^1.10.0
+  tailwind-merge: ^1.9.1
   tailwindcss: ^3.2.7
   tailwindcss-animate: ^1.0.5
   typescript: 4.9.5
   websoc-api: ^3.0.0
 
 dependencies:
-  '@alexanderliu/cheerio-table-parser': link:../cheerio-table-parser
+  '@alexanderliu/cheerio-table-parser': 2.0.2
   '@next/font': 13.1.6
-  '@pedroentringer/cheerio-table-parser': 2.0.0
   '@radix-ui/colors': 0.1.8
   '@radix-ui/react-avatar': 1.0.1_biqbaboplfbrettd7655fr4n2y
   '@radix-ui/react-dropdown-menu': 2.0.2_zula6vjvt3wdocc4mwcxqa6nzi
@@ -68,6 +67,7 @@ dependencies:
   node-html-parser: 6.1.4
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-icons: 4.7.1_react@18.2.0
   server-only: 0.0.1
   tailwind-merge: 1.10.0
   tailwindcss-animate: 1.0.5_tailwindcss@3.2.7
@@ -95,6 +95,12 @@ packages:
   /@adobe/css-tools/4.1.0:
     resolution: {integrity: sha512-mMVJ/j/GbZ/De4ZHWbQAQO1J6iVnjtZLc9WEdkUQb8S/Bu2cAF2bETXUgMAdvMG3/ngtKmcNBe+Zms9bg6jnQQ==}
     dev: true
+
+  /@alexanderliu/cheerio-table-parser/2.0.2:
+    resolution: {integrity: sha512-0ikvh1rtenEr/xm1+w3kCUlyqhRtPgnwKL/0UFoI9+Ui8BHK5RPJ2PaXJ/1SJyjSYLvJq6m4VZNci4e9Y4Ju1Q==}
+    dependencies:
+      cheerio: 1.0.0-rc.12
+    dev: false
 
   /@ampproject/remapping/2.2.0:
     resolution: {integrity: sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w==}
@@ -927,12 +933,6 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
-
-  /@pedroentringer/cheerio-table-parser/2.0.0:
-    resolution: {integrity: sha512-P6BgpyBPUOLKSYFuw9tlZZEJsUram4uR/l4ocCqn0bYDH/WMVS5um3qpelVybD+rU+nhlb8AAoijLybX61qLPw==}
-    dependencies:
-      cheerio: 1.0.0-rc.12
-    dev: false
 
   /@pkgr/utils/2.3.1:
     resolution: {integrity: sha512-wfzX8kc1PMyUILA+1Z/EqoE4UCXGy0iRGMhPwdfae1+f0OXlLqCk+By+aMzgJBzR9AzS4CDizioG6Ss1gvAFJw==}
@@ -4843,6 +4843,14 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+
+  /react-icons/4.7.1_react@18.2.0:
+    resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}

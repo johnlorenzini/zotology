@@ -1,5 +1,6 @@
+'use client'
 import Link from "next/link";
-
+import { useState } from "react";
 import { siteConfig } from "./siteConfig";
 import { Button } from "@/lib/components/legacy/ui/button";
 import {
@@ -16,17 +17,39 @@ import {
   AvatarImage,
 } from "@/lib/components/legacy/ui/avatar";
 
-import { LogOut } from "lucide-react";
-import { User } from "lucide-react";
+import { supabase } from "@/lib/supabase/utils/supabase-secret";
 
-const UserNav = () => (
+import { LogOut } from "lucide-react";
+import { CgProfile } from "react-icons/cg"
+
+const UserNav = () => {
+  // const [login, setLogin] = useState({});
+  
+
+  // async function signInWithGoogle() {
+  //   const { data, error } = await supabase.auth.signInWithOAuth({
+  //     provider: 'google',
+  //   })
+  // }
+  // async function signout() {
+  //   const { error } = await supabase.auth.signOut()
+  // }
+
+  // const { data: { user } } = await supabase.auth.getUser();
+  // console.log(user)
+  // if(!user) {
+  //   signInWithGoogle();
+  // }
+
+   
+  return(
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button
         variant="ghost"
         className="flex gap-1 p-0 text-base hover:bg-transparent"
       >
-        <User className="text-xl text-white" />
+        <CgProfile className="text-xl text-white" />
         <span className="items-center text-sm font-medium text-white hover:underline">
           {siteConfig.currentUser.netID}
         </span>
@@ -50,16 +73,16 @@ const UserNav = () => (
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuItem asChild>
-        <Link
-          href="https://www.reg.uci.edu/registrar/soc/webreg.html"
+        <button
           className="justify-center gap-2 cursor-pointer"
         >
           <LogOut />
           <span>{"Sign Out"}</span>
-        </Link>
+        </button>
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 );
+  }
 
 export default UserNav;

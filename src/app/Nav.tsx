@@ -10,9 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/lib/components/legacy/ui/dropdown-menu";
+
 import { Menu } from "lucide-react";
 
 import UCILogo from "./UCILogo";
+
 
 interface NavItem {
   title: string;

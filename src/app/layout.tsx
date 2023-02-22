@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/utils/supabase-server";
 import { Inter, Bitter } from "@next/font/google";
 import cn from "classnames";
 import Header from "./Header";
+import Footer from "./Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,11 +43,12 @@ export default async function RootLayout({
     */}
       <head />
       <body className={cn(inter.variable, bitter.variable)}>
-        <Header />
         <SupabaseProvider>
+          <Header />
           <SupabaseListener serverAccessToken={session?.access_token} />
           {children}
         </SupabaseProvider>
+        <Footer/>
       </body>
     </html>
   );

@@ -158,7 +158,7 @@ const parseCalendar = (tableName: string, calendar: HTMLElement) => {
 
   // @ts-ignore
   output = output.map(({ label, date, group, term, table }) => ({
-    title: label ?? null,
+    title: label.replace(/(?:\r\n|\r|\n)/g, ' ') ?? null,
     date: date ?? null,
     group: group ?? null,
     term_id: term ?? null,

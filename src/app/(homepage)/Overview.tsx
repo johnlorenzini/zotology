@@ -1,27 +1,25 @@
 const Overview = () => {
   return (
-    <div className="flex flex-col rounded-2xl px-5 gap-3 h-full text-center items-center justify-center">
+    <div className="flex flex-col rounded-2xl p-5 gap-5 h-full justify-center md:justify-start">
       <div className="flex flex-col">
-        <h4 className="text-lg font-semibold font-title text-cardtitle">
-          Enrollment Window
+        <h4 className="text-2xl font-semibold font-title text-cardtitle">
+            Enrollment<br/>Window
         </h4>
-        <span className="text-3xl font-semibold font-title text-uciblue">
-          March 6, 2023 8:15AM
-        </span>
+        <hr className="min-h-[3px] mt-4 rounded-lg w-full border-none ucigold" />  
       </div>
-
-      <hr className="h-[2px] rounded-lg w-full border-none ucigold" />
       
+      <span className="text-3xl font-semibold font-title text-uciblue">
+        March 6, 2023 8:15AM
+      </span>
+        
       <div className="flex flex-col">
-        <h4 className="text-lg font-semibold font-title">
+        <hr className="min-h-[3px] mb-4 rounded-lg w-full border-none ucigold" />
+        <h4 className="text-2xl font-semibold font-title text-cardtitle">
           Fee Status
         </h4>
-        <span className="text-3xl font-semibold font-title text-red">
+        <a href="https://zotaccount.uci.edu/" target="_blank" rel="noreferrer" className="text-xl underline font-medium font-title">
           Not Received
-        </span>
-        <span className="text-sm text-slate-500 font-title">
-          The fee payment deadline is 03/15/2023.
-        </span>
+        </a>
       </div>
     </div>
   );
