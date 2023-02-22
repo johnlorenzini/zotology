@@ -56,15 +56,24 @@ const Hit = ({ hit } : props) => {
               </tr>
             </thead>
             <tbody>
-              {sections.map(
+              {sections?.map(
                 (
                   {
                     sectionCode,
                     sectionType,
-                    meetings,
+                    units,
                     instructors,
-                    numCurrentlyEnrolled,
+                    meetings,
+                    finalExam,
                     maxCapacity,
+                    numCurrentlyEnrolled,
+                    totalEnrolled,
+                    numOnWaitlist,
+                    numRequested,
+                    numNewOnlyReserved,
+                    restrictions,
+                    status,
+                    sectionComment,
                   }: any,
                   i: any
                 ) => (

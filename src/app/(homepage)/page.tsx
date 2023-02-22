@@ -18,7 +18,7 @@ export default function Home() {
     <>
       <main className="flex flex-col items-center justify-center px-8 pb-32">
         {/* Search bar */}
-        <div className="flex w-full h-64 justify-center items-center">
+        <div className="flex w-full h-64 justify-center items-center max-w-7xl">
           <SearchWrapper/>
         </div>
 

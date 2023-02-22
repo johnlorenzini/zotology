@@ -75,7 +75,7 @@ const FuzzySearch = (props: props) => {
           className="text-black z-10 h-12 w-full rounded-full border-[1.5px] border-zinc-400 bg-zinc-50"
         />
       </div>
-      <div className="relative h-10 w-full">
+      <div className="relative h-0 w-full">
         {showResults && (
           /* @ts-ignore */
           <Accordion
