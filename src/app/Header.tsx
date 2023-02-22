@@ -14,7 +14,7 @@ const Header = () => {
         <div className="flex items-center justify-end flex-1 space-x-4 ">
           <nav className="flex items-center space-x-4">
             {siteConfig.mainNav?.length ? (
-              <nav className="hidden gap-6 md:flex md:items-center">
+              <nav className="hidden gap-6 md:flex md:items-center mr-2">
                 {siteConfig.mainNav?.map(
                   (item, index) =>
                     item.href && (

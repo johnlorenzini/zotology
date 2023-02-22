@@ -20,6 +20,15 @@ module.exports = {
         body: ["var(--font-body)", ...fontFamily.sans],
         title: ["var(--font-title)", ...fontFamily.serif],
       },
+      keyframes: {
+        in: {
+          '0%': { opacity: 0, transform: 'translateY(-30px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' }
+        }
+      },
+      animation: {
+        'in': 'in 400ms ease-in-out',
+      }
     },
   },
   plugins: [],

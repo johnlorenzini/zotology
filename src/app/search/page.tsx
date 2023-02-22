@@ -1,7 +1,11 @@
+import SearchBar from "../SearchBar";
+
 export default function Home() {
   return (
     <main>
-      <div></div>
+      <div className="flex justify-center">
+        <SearchBar/>
+      </div>
     </main>
   );
 }
