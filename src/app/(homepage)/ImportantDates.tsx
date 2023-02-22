@@ -50,9 +50,9 @@ const ImportantDates = async () => {
         {/* Timeline content */}
         <div className="relative w-full h-full flex overflow-y-scroll scrollbar-hide max-w-xl">
           {/* Timeline bar */}
-          <div className="z-0 absolute w-[2px] left-[7rem] top-0 h-full translate-x-[-40%] bg-gradient-to-b from-uciyellow to-[#f78d2d]" />
+          <div className="z-0 absolute w-[2px] left-[8rem] top-0 h-full translate-x-[-40%] bg-gradient-to-b from-uciyellow to-[#f78d2d]" />
 
-          <ol className="w-full h-full z-0 grid grid-cols-[6rem_2rem_1fr] place-items-center">
+          <ol className="w-full h-full z-0 grid grid-cols-[7rem_2rem_1fr] place-items-center">
             {dates.slice(0,4).map(({ date, title }, i) => {
               return (
                 <li key={i} className="contents my-5">
@@ -60,7 +60,7 @@ const ImportantDates = async () => {
                   <h4
                     className={cn(
                       "text-uciblue font-title font-medium",
-                      i === 0 ? "text-xl" : "text-normal opacity-70"
+                      i === 0 ? "text-lg" : "text-normal opacity-70"
                     )}
                   >
                     {formatter.format(date)}
