@@ -11,6 +11,7 @@ type Props = {
 
 type EventProps = {
   events: Array<any>;
+  title?: string;
 };
 
 type WaitlistProps = {
@@ -27,11 +28,11 @@ export const hourToTime = (hour: number) => {
   }
 };
 
-const EnrolledView = ({ events }: EventProps) => {
+export const EnrolledView = ({ events, title }: EventProps) => {
   return (
     <div className="flex flex-col pb-6">
       <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
-        Enrolled
+        {title && "Enrolled"}
       </h3>
       {events?.map(
         (
@@ -211,7 +212,7 @@ const ListView = ({ events, waitlist }: Props) => {
       <hr className="min-h-[3px] mt-2 rounded-lg w-full border-none ucigold" />
 
       {showEnroll ? (
-        <EnrolledView events={events} />
+        <EnrolledView events={events} title={"Enrolled"} />
       ) : (
         <WaitlistView waitlist={waitlist} />
       )}

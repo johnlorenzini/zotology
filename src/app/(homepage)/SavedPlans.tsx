@@ -6,7 +6,7 @@ import {supabase} from "@/lib/supabase/utils/supabase-secret";
 type Props = {
   plans: object;
 };
-
+import { redirect } from "next/navigation";
 import { Circle } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -20,12 +20,12 @@ const SavedPlans = (props: Props) => {
 
   async function createPlan() {
     if(userSession){
-      console.log("Create Plan");
       const name = "New Plan " + (numPlans + 1).toString();
         const userId = userSession.data.session?.user.id;
         if (userId) {
           supabase.from("plans").insert([{userId, name, termId}]).then((result: any) => {
-            console.log(result);
+            const planURL = "/plan?id=" + result.data[0].id;
+            redirect(planURL);
           });
         }
     }
@@ -89,6 +89,8 @@ const SavedPlans = (props: Props) => {
             <h3 className="text-sm text-[#706f6c] pl-2">Click to add a new plan</h3>
             </div>
             <div className="py-8 flex justify-center">
+
+            {/* run createPlan and redirect to /plan, sending planId */}
             <a onClick={createPlan} className="cursor-pointer">
               <TbCirclePlus className="text-uciblue text-2xl" />
             </a>

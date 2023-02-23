@@ -1,11 +1,9 @@
 import ImportantDates from "./ImportantDates";
 import Overview from "./Overview";
 import SavedPlans from "./SavedPlans";
-import ListView from "./ListView";
-import CalendarView from "./CalendarView";
+import CourseView from "./CourseView";
 import FuzzySearch from "../FuzzySearch"
 
-import { sampleEvents, sampleWaitlist } from "../siteConfig";
 import SearchBar from "../SearchBar";
 import { InstantSearch } from "react-instantsearch-hooks-web";
 import SearchWrapper from "./SearchWrapper";
@@ -29,6 +27,7 @@ export default function Home() {
 
         {/* Grid layout container */}
         <div className="grid grid-flow-row-dense gap-6 font-body grid-cols-12 max-w-7xl">
+          {/* Row 1 */}
           <div className="col-span-12 sm:col-span-5 lg:col-span-3 card h-64">
             <Overview />
           </div>
@@ -39,12 +38,9 @@ export default function Home() {
             {/* @ts-ignore */}
             <ImportantDates />
           </div>
-          <div className="card col-span-12 sm:col-span-12 lg:col-span-6 h-[60rem] pr-5">
-            <ListView events={sampleEvents} waitlist={sampleWaitlist} />
-          </div>
-          <div className="card col-span-12 sm:col-span-12 lg:col-span-6 h-[60rem] overflow-hidden">
-            <CalendarView />
-          </div>
+
+          {/* Row 2 */}
+          <CourseView />
         </div>
       </main>
     </>

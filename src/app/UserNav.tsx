@@ -27,20 +27,46 @@ const UserNav = () => {
 
   async function signInWithGoogle() {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google"
+      provider: "google",
     });
+    if (error) {
+      console.log(error);
+    } else {
+      window.location.href = window.location.hostname;
+    }
   }
 
   const login = async () => {
     signInWithGoogle();
+    const session = await supabase.auth.getSession();
   };
 
   useEffect(() => {
     const session = supabase.auth.getSession();
     if (session) {
       const explored = session.then((result) => {
+        const id = result.data.session?.user.id;
+        const ucinetid = result.data.session?.user.email?.split("@")[0];
+        if (id && ucinetid) {
+            supabase
+            .from("users")
+            .select()
+            .eq("id", id)
+            .then((results) => {
+              if(results.data?.length === 0){
+                supabase
+                  .from("users")
+                  .insert([{ id, ucinetid }])
+                  .then((result) => {
+                    console.log("success");
+                  });
+              }
+            })
+        }
         setUser(result.data?.session?.user);
       });
+    } else {
+      signInWithGoogle();
     }
   }, []);
 
@@ -49,61 +75,70 @@ const UserNav = () => {
 
     signInWithGoogle();
   }
-  return( <>{user ? (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex gap-1 px-1 text-base hover:bg-transparent rounded-xl"
+  return (
+    <>
+      {user ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex gap-1 px-1 text-base hover:bg-transparent rounded-xl"
+            >
+              <CgProfile className="text-xl text-white" />
+              <span className="items-center text-sm font-medium text-white hover:underline">
+                {user ? user.email?.split("@")[0] : ""}
+              </span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            sideOffset={24}
+            className="w-[15rem] px-5 overflow-x-hidden"
+          >
+            <DropdownMenuLabel>
+              <div className="flex flex-col items-center justify-between gap-2">
+                <Avatar className="outline outline-2 outline-uciblue drop-shadow-lg">
+                  <AvatarImage
+                    src={user?.identities[0].identity_data.avatar_url}
+                  />
+                  <AvatarFallback>?</AvatarFallback>
+                </Avatar>
+                <span className="text-uciblue">
+                  {user ? user?.identities[0].identity_data.full_name : ""}
+                </span>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              {user ? (
+                <button
+                  onClick={signout}
+                  className="w-full flex justify-center gap-2 cursor-pointer"
+                >
+                  <FiLogOut />
+                  <span>{"Sign Out"}</span>
+                </button>
+              ) : (
+                <button
+                  onClick={login}
+                  className="w-full flex justify-center gap-2 cursor-pointer"
+                >
+                  <FiLogOut />
+                  <span>{"Sign In"}</span>
+                </button>
+              )}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <button
+          onClick={login}
+          className="rounded-xl text-white border-2 border-white hover:text-uciblue bg-transparent hover:drop-shadow-md transition ease-in-out hover:bg-white py-1 px-3 text-[0.875rem]"
         >
-          <CgProfile className="text-xl text-white" />
-          <span className="items-center text-sm font-medium text-white hover:underline">
-            {user ? user.email?.split("@")[0] : ""}
-          </span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        sideOffset={24}
-        className="w-[15rem] px-5 overflow-x-hidden"
-      >
-        <DropdownMenuLabel>
-          <div className="flex flex-col items-center justify-between gap-2">
-            <Avatar className="outline outline-2 outline-uciblue drop-shadow-lg">
-              <AvatarImage src={user?.identities[0].identity_data.avatar_url} />
-              <AvatarFallback>?</AvatarFallback>
-            </Avatar>
-            <span className="text-uciblue">
-              {user ? user?.identities[0].identity_data.full_name : ""}
-            </span>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          {user ? (
-            <button
-              onClick={signout}
-              className="w-full flex justify-center gap-2 cursor-pointer"
-            >
-              <FiLogOut />
-              <span>{"Sign Out"}</span>
-            </button>
-          ) : (
-            <button
-              onClick={login}
-              className="w-full flex justify-center gap-2 cursor-pointer"
-            >
-              <FiLogOut />
-              <span>{"Sign In"}</span>
-            </button>
-          )}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  ) : (
-    <Button onClick={login} className="rounded-xl text-white hover:text-uciblue bg-transparent hover:bg-white p-2">Sign In</Button>
-  )}
-  </>
+          Sign In
+        </button>
+      )}
+    </>
   );
 };
 
