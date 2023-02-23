@@ -69,6 +69,7 @@ const FuzzySearch = (props: props) => {
     <div className="relative z-20 w-full mt-6 mb-12">
       <div className="relative">
       <Input
+          type="search"
           value={query}
           placeholder="Search for courses, instructors or enter a 5-digit course code:"
           onChange={(e) => refine(e.target.value)}
