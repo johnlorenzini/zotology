@@ -23,7 +23,7 @@ export const siteConfig: SiteConfig = {
   name: "WebReg",
   subHeading: "University Registrar",
   description:
-    "Beautifully designed components built with Radix UI and Tailwind CSS.",
+    "UCI WebReg, reimagined by Zotology.",
   mainNav: [
     {
       title: "UCI Home",
@@ -48,9 +48,6 @@ export const siteConfig: SiteConfig = {
 };
 
 export const sampleEvents: Array<any> = [
-  // { time: 11, duration: 1.33, day: 1, type: "lec", course: "Writing 60", location: "RH 104", instructor: "STAFF", enrollment: 0, capacity: 200, status: "pending", finalDate: "March 22 | 1PM - 3PM" },
-  // { time: 11, duration: 1.33, day: 1, type: "lec", course: "CS 161", location: "EH 1200", instructor: "STAFF", enrollment: 0, capacity: 200, status: "pending", finalDate: "March 24 | 11AM - 1PM"  },
-  // { time: 11, duration: 1.33, day: 1, type: "lec", course: "SOCIOL 1", location: "HH 100", instructor: "STAFF", enrollment: 0, capacity: 200, status: "pending", finalDate: "March 23 | 4PM - 5PM"  },
   {
     type: "lec",
     time: 11,

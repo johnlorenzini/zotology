@@ -6,28 +6,30 @@ import FuzzySearch from "../FuzzySearch";
 import ListView, { EnrolledView } from "../ListView";
 import { useSearchParams } from "next/navigation";
 import { sampleEvents, sampleWaitlist } from "../siteConfig";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import Link from "next/link";
 
 export default function Home() {
   const searchParams = useSearchParams();
-  const data = searchParams.get('id');
+  const data = searchParams.get("id");
 
   const [planData, setPlanData] = useState<any>(null);
   const [fetchError, setFetchError] = useState<any>(null);
 
   useEffect(() => {
-    async function retrievePlan(){
-      if(data){
+    async function retrievePlan() {
+      if (data) {
         supabase
-              .from("plans")
-              .select("name, termId, created_at, updated_at, courses")
-              .eq("id", data)
-              //.eq("name", "current")
-              .then((result) => { setPlanData(result.data?.at(0))});
+          .from("plans")
+          .select("name, termId, created_at, updated_at, courses")
+          .eq("id", data)
+          .then((result) => {
+            setPlanData(result.data?.at(0));
+          });
       }
     }
     retrievePlan();
-  }, [data])
-  
+  }, [data]);
 
   // const authsession = supabase.auth.getSession();
   // if (authsession) {
@@ -47,12 +49,20 @@ export default function Home() {
     <main>
       {fetchError && <div className="h-screen">{fetchError}</div>}
       {planData && (
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center max-w-screen-2xl">
+          {/* Back to home */}
+          <div className="w-full flex justify-start px-10 py-5">  
+            <Link href="/" className="flex items-center text-lg font-light text-gray-700 font-body">
+              <MdOutlineKeyboardArrowLeft className="text-xl" />
+              <span>Back to home</span>
+            </Link>
+          </div>
+
           {/* Grid layout */}
-          <div className="pt-20 grid grid-flow-row-dense gap-6 font-body grid-cols-12 w-full max-w-screen-2xl px-10">
+          <div className="grid grid-flow-row-dense gap-6 font-body grid-cols-12 w-full px-10">
             {/* Left: search to add classes */}
             <div className="card col-span-12 lg:col-span-6 p-5">
-              <SearchWrapper/>
+              <SearchWrapper />
             </div>
             {/* Right: edit current plan */}
             <div className="card col-span-12 lg:col-span-6 p-5">
