@@ -4,18 +4,18 @@ import Link from "next/link";
 
 type Props = {
   title: string;
-  cardId: number;
+  cardId: string;
 };
 
 const PlanCard = ({ title, cardId }: Props) => {
   return (
     <a href="/plan"
-      className="py-2 bg-[#f9f9f8] w-full h-full items-center rounded-xl px-4 text-left flex justify-between border-2 border-[#e8e8e5]"
+      className="py-2 bg-[#f9f9f8] w-full h-1/3 items-center rounded-xl px-4 text-left flex justify-between border-2 border-[#e8e8e5]"
     >
-      <h3 className="self-start text-md font-normal md:text-md lg:text-md text-cardtitle">
+      <h3 className="text-md font-normal md:text-md lg:text-md text-cardtitle">
         {title}
       </h3> 
-      <BsArrowRightShort className="text-2xl text-cardtitle" />
+      <BsArrowRightShort className="text-2xl text-uciblue" />
 
     </a>
   );

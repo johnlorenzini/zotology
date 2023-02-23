@@ -8,6 +8,7 @@ import { Inter, Bitter } from "@next/font/google";
 import cn from "classnames";
 import Header from "./Header";
 import Footer from "./Footer";
+import { Suspense } from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,7 +45,7 @@ export default async function RootLayout({
     */}
       <head />
       <body className={cn(inter.variable, bitter.variable)}>
-        <SupabaseProvider>
+        <SupabaseProvider>         
           <Header />
           <SupabaseListener serverAccessToken={session?.access_token} />
           {children}

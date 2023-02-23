@@ -88,12 +88,13 @@ const Hit = ({ hit }: props) => {
                     return (
                       <>
                         {sectionType == "Lec" && (
-                          <div className={i == 0 ? "h-1" : "h-2"} />
+                          // Lecture section padding
+                          <div className={i == 0 ? "h-2" : "h-3"} />
                         )}
                         <tr
                           className={cn(
                             "font-medium",
-                            isHeader ? "bg-[#E9E9E6] h-10" : ""
+                            isHeader ? "bg-[#E9E9E6]" : ""
                           )}
                           key={sectionCode}
                         >

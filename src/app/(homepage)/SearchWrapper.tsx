@@ -5,13 +5,13 @@ import { InstantSearch } from "react-instantsearch-hooks-web";
 import algoliasearch from "algoliasearch/lite";
 
 import React from "react";
-import FuzzySearch from "../tempsearchbar";
+import FuzzySearch from "../FuzzySearch";
 type Props = {};
 
 const SearchWrapper = (props: Props) => {
   const searchClient = algoliasearch(
-    "2224KHIU20",
-    "b30fa2c9df4a117934227a4770d289d3"
+    "YLIHB3D2PU",
+    "f5c5771bd7c29cf59e97f41edb2515a8"
   );
   return (
     <InstantSearch searchClient={searchClient} indexName="sections">

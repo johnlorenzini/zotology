@@ -3,7 +3,7 @@ import Overview from "./Overview";
 import SavedPlans from "./SavedPlans";
 import ListView from "./ListView";
 import CalendarView from "./CalendarView";
-import FuzzySearch from "../tempsearchbar"
+import FuzzySearch from "../FuzzySearch"
 
 import { sampleEvents, sampleWaitlist } from "../siteConfig";
 import SearchBar from "../SearchBar";
@@ -17,8 +17,13 @@ export default function Home() {
   return (
     <>
       <main className="flex flex-col items-center justify-center px-8 pb-32">
+
         {/* Search bar */}
-        <div className="flex w-full h-64 justify-center items-center max-w-7xl">
+        <div className="relative flex w-full h-64 justify-center items-center max-w-7xl">
+          {/* Quarter Text */}
+          <div className="font-body absolute right-10 top-2">
+            <p className="font-semibold">Spring 2023</p>
+          </div>
           <SearchWrapper/>
         </div>
 
@@ -34,10 +39,10 @@ export default function Home() {
             {/* @ts-ignore */}
             <ImportantDates />
           </div>
-          <div className="card col-span-12 sm:col-span-12 lg:col-span-6 h-[50rem] pr-5">
+          <div className="card col-span-12 sm:col-span-12 lg:col-span-6 h-[60rem] pr-5">
             <ListView events={sampleEvents} waitlist={sampleWaitlist} />
           </div>
-          <div className="card col-span-12 sm:col-span-12 lg:col-span-6 top-[80px] overflow-hidden h-[50rem]">
+          <div className="card col-span-12 sm:col-span-12 lg:col-span-6 h-[60rem] overflow-hidden">
             <CalendarView />
           </div>
         </div>
