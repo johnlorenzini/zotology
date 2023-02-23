@@ -70,7 +70,8 @@ const SavedPlans = (props: Props) => {
               <PlanCard
                 title={plan.name}
                 key={plan.id}
-                cardId={plan.id}
+                // @ts-ignore
+                cardId={plan?.id}
               />
             );
           })}

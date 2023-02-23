@@ -4,7 +4,7 @@ import Link from "next/link";
 
 type Props = {
   title: string;
-  cardId: string;
+  cardId: string | undefined | null;
 };
 
 const PlanCard = ({ title, cardId }: Props) => {
