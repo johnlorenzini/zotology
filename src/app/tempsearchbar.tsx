@@ -9,7 +9,7 @@ import { Accordion } from "../lib/components/legacy/ui/accordion"
 import Hit from "./Hit"
 
 import { Input } from "../lib/components/legacy/ui/input"
-import { AiOutlineSearch } from "react-icons/ai"
+import {MdSearch, MdClose} from "react-icons/md"
 
 import { useSearchBox } from "react-instantsearch-hooks-web"
 
