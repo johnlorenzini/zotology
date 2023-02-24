@@ -3,14 +3,26 @@
 import * as React from "react";
 import { useState, useEffect, useMemo } from "react";
 
-export type Course = {};
+import cn from "classnames";
 
 export type Event = {
   day: number;
   time: number;
   duration: number;
-  course: Course;
+  course?: string;
+  location: string;
+  sectionType: string;
 };
+
+interface ScheduleEventProps {
+  start: number;
+  begin: number;
+  length: number;
+  hours: number;
+  title: string;
+  location: string;
+  sectionType: string;
+}
 
 interface ScheduleTimesProps {
   start: number;
@@ -22,9 +34,9 @@ export const hourToTime = (hour: number, showPM: boolean = true) => {
   if (hour == 12) {
     return "12PM";
   } else if (hour < 12) {
-    return `${hour}${showPM ? "AM" : ""}`;
+    return `${hour}${showPM ? `AM` : ""}`;
   } else {
-    return `${hour - 12}${showPM ? "PM" : ""}`;
+    return `${hour - 12}${showPM ? `PM` : ""}`;
   }
 };
 
@@ -80,19 +92,13 @@ const ScheduleDay = ({ day, start, hours, events }: ScheduleDay) => {
             hours={hours}
             // @ts-ignore
             title={event.course}
+            location={event.location}
+            sectionType={event.sectionType}
           />
         ))}
     </div>
   );
 };
-
-interface ScheduleEventProps {
-  start: number;
-  begin: number;
-  length: number;
-  hours: number;
-  title: string;
-}
 
 const ScheduleEvent = ({
   start,
@@ -100,19 +106,26 @@ const ScheduleEvent = ({
   length,
   hours,
   title,
+  location,
+  sectionType,
 }: ScheduleEventProps) => {
   return (
     <div
       className="absolute grid w-full p-1"
       style={{
-        top: `${((begin - start + 0.5) / (hours + 1)) * 102}%`,
+        top: `${((begin - start + 0.5) / (hours + 1)) * 100}%`,
         height: `${(length / (hours + 1)) * 120}%`,
       }}
     >
-      <div className="px-1 text-white rounded-md border-t-[3px] border-uciblue bg-slate-300 bg-opacity-30 flex flex-col justify-start overflow-x-scroll scrollbar-hide">
+      <div
+        className={cn(
+          "px-1 text-white rounded-md pt-[2px] pl-[6px] border-t-[3px] flex flex-col justify-start overflow-x-scroll scrollbar-hide bg-slate-300 bg-opacity-40 border-uciblue",
+        )}
+        // sectionType == "Lec" ? "bg-slate-300 bg-opacity-40 border-uciblue" : "bg-slate-300 bg-opacity-20 border-uciyellow "
+      >
         <span className="text-gray-700 font-bold uppercase">{title}</span>
         <span className="text-gray-500 text-xs">
-          {hourToTime(begin, false)}-{hourToTime(begin + length)}
+          {sectionType}: {location}
         </span>
       </div>
     </div>
@@ -124,9 +137,9 @@ interface ScheduleProps {
 }
 
 const Schedule = ({ events }: ScheduleProps) => {
-  const [early, setEarly] = useState(events[0].time);
-  const [late, setLate] = React.useState(0);
-  const [start, setStart] = React.useState(7);
+  const [early, setEarly] = useState(9);
+  const [late, setLate] = React.useState(21);
+  const [start, setStart] = React.useState(8);
   const [hours, setHours] = React.useState(12);
 
   useEffect(() => {

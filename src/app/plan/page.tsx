@@ -31,6 +31,11 @@ export default function Home() {
     retrievePlan();
   }, [data]);
 
+  useEffect(() => {
+    console.log(planData)
+  }, [planData])
+
+
   // const authsession = supabase.auth.getSession();
   // if (authsession) {
   //     authsession.then((result) => {
@@ -46,10 +51,10 @@ export default function Home() {
   //     });
   // }
   return (
-    <main>
+    <main className="w-full flex justify-center">
       {fetchError && <div className="h-screen">{fetchError}</div>}
       {planData && (
-        <div className="w-full flex flex-col items-center max-w-screen-2xl">
+        <div className="w-full flex flex-col justify-center items-center max-w-screen-2xl pb-16">
           {/* Back to home */}
           <div className="w-full flex justify-start px-10 py-5">  
             <Link href="/" className="flex items-center text-lg font-light text-gray-700 font-body">

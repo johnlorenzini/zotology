@@ -52,14 +52,19 @@ const Hit = ({ hit }: props) => {
           <div className="pb-4 overflow-auto">
             <table className="w-full min-w-[750px]">
               <thead>
-                <tr className="border-b-2 border-cardtitle text-cardtitle">
-                  <th>Code</th>
-                  <th>Type</th>
-                  <th>Location</th>
-                  <th>Date/Time</th>
-                  <th>Instructor</th>
-                  <th>Enrollment</th>
-                  <th>Add?</th>
+                <tr className="text-center border-b-2 border-cardtitle text-cardtitle">
+                  <th className="px-1 text-center">Code</th>
+                  <th className="px-1 text-center">Type</th>
+                  <th className="px-1 text-center">Location</th>
+                  <th className="px-1 text-center">Time</th>
+                  <th className="px-1 text-center">Instructor</th>
+                  <th className="px-1 text-center">Units</th>
+                  <th className="px-1 text-center">Rstr</th>
+                  <th className="px-1 text-center">Nor</th>
+                  <th className="px-1 text-center">Req</th>
+                  <th className="px-1 text-center">WL</th>
+                  <th className="px-1 text-center">Enrolled</th>
+                  <th className="px-1 text-center"></th>
                 </tr>
               </thead>
               <tbody>
@@ -93,14 +98,14 @@ const Hit = ({ hit }: props) => {
                         )}
                         <tr
                           className={cn(
-                            "font-medium",
-                            isHeader ? "bg-[#E9E9E6]" : ""
+                            "font-medium text-center",
+                            isHeader ? "bg-[#E9E9E6] font-semibold" : ""
                           )}
                           key={sectionCode}
                         >
                           <td
                             className={cn(
-                              "p-1",
+                              "p-1 text-center",
                               isHeader ? "rounded-l-md" : ""
                             )}
                           >
@@ -120,11 +125,11 @@ const Hit = ({ hit }: props) => {
                               {sectionType}
                             </Highlight>
                           </td>
-                          <td>{meetings[0]?.bldg}</td>
-                          <td>
+                          <td className="px-1 text-center">{meetings[0]?.bldg}</td>
+                          <td className="px-1 text-center">
                             {meetings[0]?.days} {meetings[0]?.time}
                           </td>
-                          <td>
+                          <td className="px-1 text-center">
                             <Highlight
                               attribute={`sections.${i}.instructors`}
                               hit={hit}
@@ -132,7 +137,22 @@ const Hit = ({ hit }: props) => {
                               {instructors[0]}
                             </Highlight>
                           </td>
-                          <td>
+                          <td className="px-1 text-center">
+                              {units}
+                          </td>
+                          <td className="px-1 text-center">
+                              {restrictions}
+                          </td>
+                          <td className="px-1 text-center">
+                              {numNewOnlyReserved}
+                          </td>
+                          <td className="px-1 text-center">
+                              {numRequested}
+                          </td>
+                          <td className="px-1 text-center">
+                              {numOnWaitlist}
+                          </td>
+                          <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                           </td>
                           <td
@@ -141,7 +161,7 @@ const Hit = ({ hit }: props) => {
                               setClasses([...classes, sectionCode]);
                             }}
                             className={cn(
-                              "p-1",
+                              "px-1 text-center",
                               isHeader ? "rounded-r-md" : ""
                             )}
                           >

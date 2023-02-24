@@ -1,7 +1,10 @@
 "use client";
 import { Circle } from "lucide-react";
 import { useState } from "react";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { BsChevronDown } from "react-icons/bs";
+import { CourseSection } from "./siteConfig";
+
+import cn from "classnames";
 
 /* eslint-disable react/jsx-key */
 type Props = {
@@ -10,7 +13,7 @@ type Props = {
 };
 
 type EventProps = {
-  events: Array<any>;
+  events: Array<CourseSection>;
   title?: string;
 };
 
@@ -28,82 +31,188 @@ export const hourToTime = (hour: number) => {
   }
 };
 
+interface CourseData {
+  courseTitle?: string;
+  finalExam?: string;
+  sections?: Array<CourseSection>;
+}
+
 export const EnrolledView = ({ events, title }: EventProps) => {
+  var mappedEvents: Map<string, CourseData> = new Map();
+
+  const [showDropdown, setShowDropdown] = useState("");
+
+  events.forEach((evt) => {
+    // console.log(evt);
+    const { deptCode, courseNumber } = evt;
+    let courseString = `${deptCode} ${courseNumber}`;
+
+    if (!mappedEvents.get(courseString)) {
+      // if not present, add to map
+      const { courseTitle, finalExam } = evt;
+      mappedEvents.set(courseString, {
+        courseTitle,
+        finalExam,
+        sections: [evt],
+      });
+    } else {
+      // already present, add to maps array
+      if (["Lec", "Sem"].includes(evt.sectionType)) {
+        const { courseTitle, finalExam } = evt;
+
+        const existingSections = mappedEvents.get(courseString)?.sections ?? [];
+
+        // always add lecture or seminar to front
+        mappedEvents.set(courseString, {
+          courseTitle,
+          finalExam,
+          sections: [evt, ...existingSections],
+        });
+      } else {
+        mappedEvents.get(courseString)?.sections?.push(evt);
+      }
+    }
+  });
+
+  // console.log(mappedEvents);
+
   return (
     <div className="flex flex-col pb-6">
       <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
         {title && "Enrolled"}
       </h3>
-      {events?.map(
-        (
-          {
-            type,
-            time,
-            location,
-            instructor,
-            enrollment,
-            finalDate,
-            capacity,
-            status,
-            course,
-            days,
-          }: any,
-          i: number
-        ) => {
-          return (
-            <div className="w-full" key={i}>
-              <h4 className="text-xl font-semibold">{course}</h4>
-              <span className=" text-uciblue">
-                Final: Apr 1, 2023 8:00AM - 10:20AM{finalDate}
-              </span>
-              <table className="w-full text-left mt-2">
-                <thead className="text-center">
-                  <tr className="py-2 bg-uciblue text-white text-medium">
-                    <th className="py-1 rounded-l-sm overflow-hidden"></th>
-                    <th className="py-1">Type</th>
-                    <th className="py-1">Location</th>
-                    <th className="py-1">Time</th>
-                    <th className="py-1">Instructor</th>
-                    <th className="py-1 rounded-r-sm overflow-hidden"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="text-center">
-                    <td className="py-1">
-                      <button className="rounded-lg w-8 h-full bg-[#ffd027] flex py-4 px-2 items-center justify-center">
-                        <Circle className="w-4" />
-                      </button>
-                    </td>
-                    <td className="py-4 uppercase">{type}</td>
-                    <td className="py-4">{location}</td>
-                    <td className="py-4 ">
-                      {days + " " + hourToTime(time ?? 0)}
-                    </td>
-                    <td className="py-4">{instructor}</td>
-                    <td className="py-4 flex justify-end">
-                      <a
-                        href=""
-                        className="w-14 h-full rounded-lg bg-[#f3f3f2] border-2 border-[#e7e7e5] text-center flex py-4 items-center justify-center"
-                      >
-                        <MdKeyboardArrowDown className="w-4" />
-                      </a>
-                    </td>
-                  </tr>
-                  <tr className="hidden">
-                    <td colSpan={6}>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Voluptatibus voluptatem libero est labore iure autem,
-                      facilis sunt, quas numquam, asperiores ex quae! Numquam
-                      incidunt nostrum explicabo necessitatibus molestias veniam
-                      culpa!
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          );
-        }
-      )}
+      {Array.from(mappedEvents)?.map((mapEntry, i) => {
+        const [courseString, courseData] = mapEntry;
+        // console.log(courseString, courseData);
+
+        return (
+          <div className="w-full" key={i}>
+            <h4 className="text-xl font-semibold">{courseString}</h4>
+            <h5 className="text-lg">{courseData.courseTitle}</h5>
+            <span className=" text-uciblue">Final: {courseData.finalExam}</span>
+            <table className="w-full text-left mt-2 overflow-x-scroll">
+              <thead className="text-center">
+                <tr className="py-2 bg-uciblue text-white text-medium">
+                  <th className="py-1 rounded-l-sm overflow-hidden"></th>
+                  <th className="py-1">Code</th>
+                  <th className="py-1">Type</th>
+                  <th className="py-1">Location</th>
+                  <th className="py-1">Time</th>
+                  <th className="py-1">Instructor</th>
+                  <th className="py-1">Units</th>
+                  <th className="py-1">Grade</th>
+                  <th className="py-1 rounded-r-sm overflow-hidden"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {courseData.sections?.map(
+                  (
+                    {
+                      sectionType,
+                      meetings,
+                      instructors,
+                      sectionCode,
+                      units,
+                    }: CourseSection,
+                    i
+                  ) => {
+                    const {
+                      days: meetDays,
+                      time: meetTime,
+                      bldg,
+                    } = meetings[0];
+                    const instructor = instructors[0];
+
+                    return (
+                      <>
+                        <tr
+                          className={cn(
+                            "text-center relative z-20",
+                            i % 2 == 0
+                              ? "bg-zinc-100 bg-opacity-30"
+                              : "bg-zinc-100"
+                          )}
+                        >
+                          <td className="py-1 pl-1">
+                            <div className="rounded-md w-1 h-10 bg-[#ffd027] flex items-center justify-center">
+                              {/* <Circle className="w-4" /> */}
+                            </div>
+                          </td>
+                          {/* Code */}
+                          <td className="py-4">{sectionCode}</td>
+
+                          {/* Type */}
+                          <td className="py-4 uppercase">{sectionType}</td>
+
+                          {/* Location */}
+                          <td className="py-4">{bldg}</td>
+
+                          {/* Time */}
+                          <td className="py-4 ">
+                            <span>{meetDays}</span> <br />
+                            <span>{meetTime}</span>
+                          </td>
+
+                          {/* Instructor */}
+                          <td className="py-4">{instructor}</td>
+
+                          {/* Units */}
+                          <td className="py-4">{units}</td>
+
+                          {/* Gr Type */}
+                          <td className="py-4">Letter</td>
+
+                          {/*  */}
+                          <td className="py-4 px-4 justify items-center justify-center">
+                            <button
+                              className="flex justify-center items-center"
+                              onClick={() => {
+                                if (showDropdown == sectionCode) {
+                                  setShowDropdown("");
+                                } else {
+                                  setShowDropdown(sectionCode);
+                                }
+                              }}
+                            >
+                              <BsChevronDown
+                                className={cn(
+                                  "text-xl",
+                                  showDropdown == sectionCode
+                                    ? "rotate-180"
+                                    : ""
+                                )}
+                              />
+                            </button>
+                          </td>
+                        </tr>
+                        {/* Conditionally render description row */}
+                        {showDropdown == sectionCode && (
+                          <tr className="animate-appear relative z-0">
+                            <td colSpan={999}>
+                              <div className="grid grid-cols-[repeat(2,1fr)] justify-between">
+                                <div>
+                                  <h6 className="text-uciblue font-medium">Edit Class</h6>
+                                  <input type="checkbox" name="editclass" className="inline-block"/>
+                                  <span className="px-3">Change to P/NP</span>
+                                </div>
+                                <div>
+                                  <h6 className="text-uciblue font-medium">Actions</h6>
+                                  <input type="checkbox" name="enrollnow"/>
+                                  <span className="px-3">Change to P/NP</span>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -164,13 +273,10 @@ const WaitlistView = ({ waitlist }: WaitlistProps) => {
                         {days + " " + hourToTime(time ?? 0)}
                       </td>
                       <td className="py-4">{instructor}</td>
-                      <td className="py-4 flex justify-end">
-                        <a
-                          href=""
-                          className="w-14 h-full rounded-lg bg-[#f3f3f2] border-2 border-[#e7e7e5] text-center flex py-4 items-center justify-center"
-                        >
-                          <MdKeyboardArrowDown className="w-4" />
-                        </a>
+                      <td className="py-4 px-4 justify items-center justify-center">
+                        <button className="flex justify-center items-center">
+                          <BsChevronDown className="text-xl" />
+                        </button>
                       </td>
                     </tr>
                   </tbody>
@@ -203,7 +309,7 @@ const ListView = ({ events, waitlist }: Props) => {
           </h4>
         </div>
         <button
-          className="bg-zinc-200 px-4 py-1 rounded-md h-10 w-[9rem]"
+          className="bg-[#f3f3f2] border-2 border-[#e7e7e5] px-4 py-1 rounded-md h-10 w-[9rem]"
           onClick={handleToggleView}
         >
           {showEnroll ? "Waitlist View" : "Enrolled View"}

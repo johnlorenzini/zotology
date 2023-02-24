@@ -37,12 +37,10 @@ export default async function handler(
     .map(([titleElement, calendarElement]) =>
       parseCalendar(titleElement.innerText, calendarElement)
     );
-
   const { data, error } = await supabase
     .from("dates")
     .upsert(calendars.flat(2), {
       ignoreDuplicates: false,
-      onConflict: "term_id, title",
     })
     .select();
 

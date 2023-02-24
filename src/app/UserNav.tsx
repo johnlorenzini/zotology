@@ -31,8 +31,6 @@ const UserNav = () => {
     });
     if (error) {
       console.log(error);
-    } else {
-      window.location.href = window.location.hostname;
     }
   }
 
@@ -42,18 +40,17 @@ const UserNav = () => {
   };
 
   useEffect(() => {
-    const session = supabase.auth.getSession();
-    if (session) {
-      const explored = session.then((result) => {
-        const id = result.data.session?.user.id;
-        const ucinetid = result.data.session?.user.email?.split("@")[0];
+    supabase.auth.getSession().then((session) => {
+      if (session.data.session) {
+        const id = session.data.session?.user.id;
+        const ucinetid = session.data.session?.user.email?.split("@")[0];
         if (id && ucinetid) {
-            supabase
+          supabase
             .from("users")
             .select()
             .eq("id", id)
             .then((results) => {
-              if(results.data?.length === 0){
+              if (results.data?.length === 0) {
                 supabase
                   .from("users")
                   .insert([{ id, ucinetid }])
@@ -61,19 +58,20 @@ const UserNav = () => {
                     console.log("success");
                   });
               }
-            })
+            });
         }
-        setUser(result.data?.session?.user);
-      });
-    } else {
-      signInWithGoogle();
-    }
+        setUser(session.data?.session?.user);
+      } else {
+        // signInWithGoogle();
+      }
+    });
   }, []);
 
   async function signout() {
     const { error } = await supabase.auth.signOut();
-
-    signInWithGoogle();
+    if (error) {
+      console.log(error);
+    }
   }
   return (
     <>
@@ -132,7 +130,7 @@ const UserNav = () => {
         </DropdownMenu>
       ) : (
         <button
-          onClick={login}
+          onClick={signInWithGoogle}
           className="rounded-xl text-white border-2 border-white hover:text-uciblue bg-transparent hover:drop-shadow-md transition ease-in-out hover:bg-white py-1 px-3 text-[0.875rem]"
         >
           Sign In

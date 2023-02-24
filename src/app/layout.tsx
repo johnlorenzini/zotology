@@ -9,6 +9,7 @@ import cn from "classnames";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Suspense } from "react";
+import WelcomeLogin from "./WelcomeLogin";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,17 +27,16 @@ const bitter = Bitter({
 export const revalidate = 0;
 
 export default async function RootLayout({
-    children,
-  }: {
-    children: React.ReactNode;
-  }) {
-
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const supabase = createClient();
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  
+
   return (
     <html lang="en">
       {/*
@@ -45,12 +45,12 @@ export default async function RootLayout({
     */}
       <head />
       <body className={cn(inter.variable, bitter.variable)}>
-        <SupabaseProvider>         
-          <Header />
-          <SupabaseListener serverAccessToken={session?.access_token} />
-          {children}
+        <SupabaseProvider>
+              <Header />
+              <SupabaseListener serverAccessToken={session?.access_token} />
+              {children}
         </SupabaseProvider>
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );
