@@ -39,19 +39,39 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
+
     if (session) {
       const { data, error } = await supabase
         .from("users")
         .select()
         .eq("id", session.user.id);
+
       if (data) {
-        const sections = data?.at(0).sections;
-        if (sections && sections.length > 0) {
-          const newSections = [...sections, sectionCode];
+        const sections = data.at(0).sections;
+        const id = data.at(0).id;
+        const ucinetid = data.at(0).ucinetid;
+        if (!sections.includes(sectionCode)) {
+          // Add course description to local states
+          supabase
+            .from("sections")
+            .select()
+            .eq("sectionCode", sectionCode) // ["XXXXX", "XXXXX", "XXXXX"]
+            .then((result) => {
+            });
+
+          // Update new course code on database
+          sections.push(sectionCode);
+
           const { data, error } = await supabase
             .from("users")
-            .update({ sections: newSections })
-            .eq("id", session.user.id);
+            .update({ id: id, ucinetid: ucinetid, sections: sections })
+            .eq("id", id)
+            .select();
+
+
+          if (error) {
+            console.log(error);
+          }
           if (data) {
             toast.success("Enrolled!", {
               position: "top-right",
@@ -63,22 +83,21 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
               transition: Slide,
             });
             handleDelete(sectionCode);
-          } else {
-            toast.error("ERROR: Enrollment Failed", {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              progress: undefined,
-              theme: "light",
-              transition: Slide,
-            });
-            console.log(error);
           }
+        } else {
+          toast.error("ERROR: You are already enrolled in this class!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            progress: undefined,
+            theme: "light",
+            transition: Slide,
+          });
         }
       }
-    }
   }
+}
 
   const searchParams = useSearchParams();
 
