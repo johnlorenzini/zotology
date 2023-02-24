@@ -54,7 +54,6 @@ const UserNav = () => {
                   .from("users")
                   .insert([{ id, ucinetid }])
                   .then((result) => {
-                    console.log("success");
                   });
               }
             });

@@ -39,6 +39,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
     "react-instantsearch-hooks-web": "^6.40.1",
+    "react-toastify": "^9.1.1",
     "react-use": "^17.4.0",
     "server-only": "^0.0.1",
     "tailwind-merge": "^1.9.1",

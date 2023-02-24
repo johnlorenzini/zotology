@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Schedule, Event } from "./Schedule";
 
 import { parseTime } from "@/lib/section/utils/parseTime";
@@ -23,36 +24,46 @@ type Props = {
 // ];
 
 const CalendarView = ({ events }: Props) => {
-  let parsedEvents: Array<Event> = [];
+  let [calendarEvents, setCalendarEvents] = useState<Array<Event>>([]);
 
-  events.forEach((evt) => {
-    const { meetings, courseTitle, courseFull, sectionType} = evt;
+  var parsedEvents: Array<Event> = [];
 
-    const location = meetings[0]?.bldg
-    const timeString = `${meetings[0]?.days} ${meetings[0]?.time}`;
-    const { days, start, end } = parseTime(timeString);
+  useEffect(() => {
+    console.log('parsing calendar')
 
-    const [ startHr, startMin] = start.split(':');
- 
-    const [ endHr, endMin] = end.split(':');
-    
-    const parsedStart = Number(startHr) + (Number(startMin) / 60)
-    const parsedEnd = Number(endHr) + (Number(endMin) / 60)
+    events.forEach((evt) => {
+      const { meetings, courseTitle, courseFull, sectionType } = evt;
 
-    console.log(meetings[0]?.time)
+      const location = meetings[0]?.bldg;
+      const timeString = `${meetings[0]?.days} ${meetings[0]?.time}`;
 
-    days.forEach((evtDay) => {
+      const { days, start, end } = parseTime(timeString);
+
+      const startGroups = start.split(":");
+      const endGroups = end.split(":");
+
+      const [startHr, startMin] = startGroups;
+      const [endHr, endMin] = endGroups;
+
+      const parsedStart = Number(startHr) + Number(startMin) / 60;
+      const parsedEnd = Number(endHr) + Number(endMin) / 60;
+
+      days.forEach((evtDay) => {
         let parsedEvent: Event = {
-            day: evtDay,
-            time: parsedStart,
-            duration: parsedEnd - parsedStart,
-            course: courseFull,
-            location: location,
-            sectionType: sectionType,
+          day: evtDay,
+          time: parsedStart,
+          duration: parsedEnd - parsedStart,
+          course: courseFull,
+          location: location,
+          sectionType: sectionType,
         };
-        parsedEvents.push(parsedEvent)
-    })
-  });
+        parsedEvents.push(parsedEvent);
+      });
+
+      setCalendarEvents(parsedEvents);
+ 
+    });
+  }, [events]);
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -64,7 +75,7 @@ const CalendarView = ({ events }: Props) => {
       </div>
       {/* Calendar Wrapper */}
       <div className="w-full h-full">
-        <Schedule events={parsedEvents} />
+        <Schedule events={calendarEvents} />
       </div>
     </div>
   );

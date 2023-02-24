@@ -1,22 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import search, { SearchResult } from "websoc-fuzzy-search";
-import React from "react";
 
-import { Hits, InstantSearch } from "react-instantsearch-hooks-web";
+import { Hits } from "react-instantsearch-hooks-web";
 import { Accordion } from "../lib/components/legacy/ui/accordion";
 import Hit from "./Hit";
 
 import { Input } from "../lib/components/legacy/ui/input";
-import { MdSearch, MdClose } from "react-icons/md";
 
 import { useSearchBox } from "react-instantsearch-hooks-web";
+import { supabase } from "@/lib/supabase/utils/supabase-secret";
 
 type props = {};
 
 const FuzzySearch = (props: props) => {
   const { query, refine } = useSearchBox(props);
+  const [classes, setClasses] = useState([]);
 
   // const [searchResults, setSearchResults] = useState([])
   // const [searchTerm, setSearchTerm] = useState("")
@@ -28,6 +27,26 @@ const FuzzySearch = (props: props) => {
       setShowResults(false);
     }
   }, [query]);
+
+  useEffect(() => {
+    async function getCourses() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        const { data, error } = await supabase
+          .from("users")
+          .select()
+          .eq("id", session.user.id);
+
+        if (data) {
+          const sections = data.at(0).sections;
+          setClasses(sections);
+        }
+      }
+    }
+    getCourses();
+  }, []);
 
   //     // filter out the results that are not courses
   //     let filtered = Object.entries(results).filter(([courseId, courseData]): any => {
@@ -78,12 +97,12 @@ const FuzzySearch = (props: props) => {
         {showResults && (
           /* @ts-ignore */
           <Accordion
-            className="absolute top-0 w-full"
+            className="absolute top-0 w-full max-h-[1450px] overflow-y-scroll"
             type="multiple"
             defaultValue=""
             collapsible
           >
-            <Hits hitComponent={Hit} />
+            <Hits hitComponent={({ hit }) => <Hit hit={hit} />} />
           </Accordion>
         )}
       </div>

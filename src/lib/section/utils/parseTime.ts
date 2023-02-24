@@ -43,6 +43,15 @@ export const parseTime = (time: string): ParsedTime => {
     /(?<Monday>M)?(?<Tuesday>Tu)?(?<Wednesday>W)?(?<Thursday>Th)?(?<Friday>F)? +(?<startHr>\d+):(?<startMin>\d+)- *(?<endHr>\d+):(?<endMin>\d+)(?<isPM>p?)/;
   const regMatch = regex.exec(time)!;
 
+  if (!regMatch) {
+    console.log("string doesnt match")
+    return {
+      days: [],
+      start: "",
+      end: "" 
+    }
+  }
+
   let {
     Monday,
     Tuesday,

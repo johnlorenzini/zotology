@@ -42,6 +42,7 @@ specifiers:
   react-dom: 18.2.0
   react-icons: ^4.7.1
   react-instantsearch-hooks-web: ^6.40.1
+  react-toastify: ^9.1.1
   react-use: ^17.4.0
   server-only: ^0.0.1
   supabase: ^1.38.6
@@ -82,6 +83,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
   react-instantsearch-hooks-web: 6.40.1_lcvw2wliyvolumce2ki4t5bwom
+  react-toastify: 9.1.1_biqbaboplfbrettd7655fr4n2y
   react-use: 17.4.0_biqbaboplfbrettd7655fr4n2y
   server-only: 0.0.1
   tailwind-merge: 1.10.0
@@ -5378,6 +5380,17 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.5.0
+    dev: false
+
+  /react-toastify/9.1.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-pkFCla1z3ve045qvjEmn2xOJOy4ZciwRXm1oMPULVkELi5aJdHCN/FHnuqXq8IwGDLB7PPk2/J6uP9D8ejuiRw==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      clsx: 1.2.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react-universal-interface/0.6.2_react@18.2.0+tslib@2.5.0:

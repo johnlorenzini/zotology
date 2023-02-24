@@ -6,35 +6,180 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "../lib/components/legacy/ui/accordion";
-import { BsPlusCircle, BsFillCheckCircleFill } from "react-icons/bs";
+import { Slide, Zoom, Flip, Bounce } from "react-toastify";
+
 import { Highlight } from "react-instantsearch-hooks-web";
-import { Separator } from "../lib/components/legacy/ui/separator";
-import {supabase} from "@/lib/supabase/utils/supabase-secret";
+import { supabase } from "@/lib/supabase/utils/supabase-secret";
 
 import cn from "classnames";
+import { useEffect, useState } from "react";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useUserContext } from "./SectionsContext";
 
 type props = {
   hit: any;
 };
 
 const Hit = ({ hit }: props) => {
-  const [classes, setClasses] = useLocalStorage("classes", []);
+  const { courseContext, setCourseContext } = useUserContext();
+  const [session, setSession] = useState(null);
 
-  async function handleSubmit(courseCode : string){
-    const {data: {session}} = await supabase.auth.getSession();
-    if(session){
-      const {data, error} = await supabase
+  // async function getClasses(){
+  //   const {data: {session}} = await supabase.auth.getSession();
+  //   if(session){
+  //     const {data, error} = await supabase
+  //       .from("users")
+  //       .select()
+  //       .eq("id", session.user.id)
+  //     console.log(data)
+
+  //     if(data){
+  //       const sections = data.at(0).sections
+  //       setClasses(sections)
+  //     }
+  //   }
+  // }
+
+  function checkEnrolled(courseCode: string) {
+    let classes = [""];
+    if (classes.length > 0) {
+      // @ts-ignore
+      return classes.includes(courseCode);
+    }
+  }
+  async function handleUnenroll(courseCode: string) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      const { data, error } = await supabase
         .from("users")
         .select()
-        .eq("id", session.user.id)
-        
-        
+        .eq("id", session.user.id);
+
+      if (data) {
+        const sections = data.at(0).sections;
+        const id = data.at(0).id;
+        const ucinetid = data.at(0).ucinetid;
+        if (sections.includes(courseCode)) {
+          sections.splice(sections.indexOf(courseCode), 1);
+
+          const { data, error } = await supabase
+            .from("users")
+            .update({ id: id, ucinetid: ucinetid, sections: sections })
+            .eq("id", id)
+            .select();
+
+          if (error) {
+            console.log(error);
+          }
+          if (data) {
+            toast.success("Unenrolled!", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              progress: undefined,
+              theme: "light",
+              transition: Slide,
+            });
+          }
+        }
+      }
+    }
+  }
+
+  async function handleSubmit(courseCode: string) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      const { data, error } = await supabase
+        .from("users")
+        .select()
+        .eq("id", session.user.id);
+
+      if (data) {
+        const sections = data.at(0).sections;
+        const id = data.at(0).id;
+        const ucinetid = data.at(0).ucinetid;
+        if (!sections.includes(courseCode)) {
+          // Add course description to local states
+          supabase
+            .from("sections")
+            .select()
+            .eq("sectionCode", courseCode) // ["XXXXX", "XXXXX", "XXXXX"]
+            .then((result) => {
+              if (result) {
+                console.log("added course", result.data?.at(0));
+                setCourseContext(courses => [...courses, result.data?.at(0)])
+              }
+            });
+
+          // Update new course code on database
+          sections.push(courseCode);
+
+          const { data, error } = await supabase
+            .from("users")
+            .update({ id: id, ucinetid: ucinetid, sections: sections })
+            .eq("id", id)
+            .select();
+
+
+          if (error) {
+            console.log(error);
+          }
+          if (data) {
+            toast.success("Enrolled!", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              progress: undefined,
+              theme: "light",
+              transition: Slide,
+            });
+          }
+        } else {
+          toast.error("ERROR: You are already enrolled in this class!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            progress: undefined,
+            theme: "light",
+            transition: Slide,
+          });
+        }
+      }
+
+      //   if(data){
+      //     const response = await supabase
+      //       .from("users")
+      //       .update({sections : [...data[0].sections, courseCode]})
+      //       .eq("id", session.user.id)
+
+      //     if(response.error){
+      //       console.log(response.error)
+      //     }
+
+      // }
     }
   }
 
   if (!hit) return <></>;
 
-  const { objectID, deptCode, courseNumber, courseTitle, sections } = hit;
+  const {
+    objectID,
+    deptCode,
+    courseNumber,
+    courseTitle,
+    courseComment,
+    prerequisiteLink,
+    sections,
+  } = hit;
 
   return (
     <AccordionItem className="my-2 AccordionItem" value={objectID}>
@@ -77,6 +222,7 @@ const Hit = ({ hit }: props) => {
                   <th className="px-1 text-center">Req</th>
                   <th className="px-1 text-center">WL</th>
                   <th className="px-1 text-center">Enrolled</th>
+                  <th className="px-1 text-center"></th>
                   <th className="px-1 text-center"></th>
                 </tr>
               </thead>
@@ -138,7 +284,9 @@ const Hit = ({ hit }: props) => {
                               {sectionType}
                             </Highlight>
                           </td>
-                          <td className="px-1 text-center">{meetings[0]?.bldg}</td>
+                          <td className="px-1 text-center">
+                            {meetings[0]?.bldg}
+                          </td>
                           <td className="px-1 text-center">
                             {meetings[0]?.days} {meetings[0]?.time}
                           </td>
@@ -150,31 +298,43 @@ const Hit = ({ hit }: props) => {
                               {instructors[0]}
                             </Highlight>
                           </td>
+                          <td className="px-1 text-center">{units}</td>
+                          <td className="px-1 text-center">{restrictions}</td>
                           <td className="px-1 text-center">
-                              {units}
+                            {numNewOnlyReserved}
                           </td>
-                          <td className="px-1 text-center">
-                              {restrictions}
-                          </td>
-                          <td className="px-1 text-center">
-                              {numNewOnlyReserved}
-                          </td>
-                          <td className="px-1 text-center">
-                              {numRequested}
-                          </td>
-                          <td className="px-1 text-center">
-                              {numOnWaitlist}
-                          </td>
+                          <td className="px-1 text-center">{numRequested}</td>
+                          <td className="px-1 text-center">{numOnWaitlist}</td>
                           <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                           </td>
                           <td>
                             <button
-                              className="px-4 py-2 bg-uciblue text-white font-bold rounded-full hover:bg-cardtitle transition ease-in-out"
-                              onClick={() => {handleSubmit(sectionCode)}}
-                            >
-                              Add
-                            </button>
+                              className="px-3 py-1 text-sm bg-blue-200 border-2 border-blue-700 font-bold rounded-xl hover:bg-blue-700 transition ease-in-out"
+                              >
+                                PLAN
+                              </button>
+                          </td>
+                          <td>
+                            {checkEnrolled(sectionCode) ? (
+                              <button
+                                className="px-3 py-1 text-sm bg-rose-200 border-2 border-rose-700 font-bold rounded-xl hover:bg-rose-700 transition ease-in-out"
+                                onClick={() => {
+                                  handleUnenroll(sectionCode);
+                                }}
+                              >
+                                UNENROLL
+                              </button>
+                            ) : (
+                              <button
+                                className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-bold rounded-xl hover:bg-green-700 transition ease-in-out"
+                                onClick={() => {
+                                  handleSubmit(sectionCode);
+                                }}
+                              >
+                                ENROLL
+                              </button>
+                            )}
                           </td>
                         </tr>
                       </>

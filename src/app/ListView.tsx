@@ -3,8 +3,13 @@ import { Circle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BsChevronDown } from "react-icons/bs";
 import { CourseSection } from "./siteConfig";
-
+import { RiCloseCircleLine } from "react-icons/ri";
+import { supabase } from "@/lib/supabase/utils/supabase-secret";
 import cn from "classnames";
+import { Slide, Zoom, Flip, Bounce } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useUserContext } from "./SectionsContext";
 
 /* eslint-disable react/jsx-key */
 type Props = {
@@ -38,18 +43,58 @@ interface CourseData {
 }
 
 export const EnrolledView = ({ events, title }: EventProps) => {
-  var [allEvents, setAllEvents] = useState<Map<string, CourseData>>(new Map());
+  const { courseContext, setCourseContext } = useUserContext();
 
+  const [allEvents, setAllEvents] = useState<Map<string, CourseData>>(
+    new Map()
+  );
+
+  async function handleDelete(sectionCode: string) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      const { data, error } = await supabase
+        .from("users")
+        .select()
+        .eq("id", session.user.id);
+
+      const sections = data?.at(0).sections;
+      if (sections && sections.length > 0) {
+        const newSections = sections.filter(
+          (section: string) => section !== sectionCode
+        );
+
+        const newCourseContext = courseContext.filter(
+          (section: CourseSection) => section.sectionCode !== sectionCode
+        );
+
+        setCourseContext(newCourseContext);
+
+        // update user
+        const { data, error } = await supabase
+          .from("users")
+          .update({ sections: newSections })
+          .eq("id", session.user.id);
+
+        toast.success("Unenrolled!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          progress: undefined,
+          theme: "light",
+          transition: Slide,
+        });
+      }
+    }
+  }
   const [showDropdown, setShowDropdown] = useState("");
 
-  // console.log(events);
-
   useEffect(() => {
-    console.log('events', events)
     var mappedEvents: Map<string, CourseData> = new Map();
 
     events.forEach((evt) => {
-      console.log(evt);
       const { deptCode, courseNumber } = evt;
       let courseString = `${deptCode} ${courseNumber}`;
 
@@ -79,47 +124,10 @@ export const EnrolledView = ({ events, title }: EventProps) => {
           mappedEvents.get(courseString)?.sections?.push(evt);
         }
       }
-
-      console.log('map', mappedEvents)
     });
 
-    setAllEvents(mappedEvents)
+    setAllEvents(mappedEvents);
   }, [events]);
-
-  useEffect(() => {console.log('all events', allEvents)}, [allEvents])
-  // events.forEach((evt) => {
-  //   // console.log(evt);
-  //   const { deptCode, courseNumber } = evt;
-  //   let courseString = `${deptCode} ${courseNumber}`;
-
-  //   if (!mappedEvents.get(courseString)) {
-  //     // if not present, add to map
-  //     const { courseTitle, finalExam } = evt;
-  //     mappedEvents.set(courseString, {
-  //       courseTitle,
-  //       finalExam,
-  //       sections: [evt],
-  //     });
-  //   } else {
-  //     // already present, add to maps array
-  //     if (["Lec", "Sem"].includes(evt.sectionType)) {
-  //       const { courseTitle, finalExam } = evt;
-
-  //       const existingSections = mappedEvents.get(courseString)?.sections ?? [];
-
-  //       // always add lecture or seminar to front
-  //       mappedEvents.set(courseString, {
-  //         courseTitle,
-  //         finalExam,
-  //         sections: [evt, ...existingSections],
-  //       });
-  //     } else {
-  //       mappedEvents.get(courseString)?.sections?.push(evt);
-  //     }
-  //   }
-  // });
-
-  // console.log(mappedEvents);
 
   return (
     <div className="flex flex-col pb-6">
@@ -194,7 +202,8 @@ export const EnrolledView = ({ events, title }: EventProps) => {
 
                           {/* Time */}
                           <td className="py-4 ">
-                            <span>{meetDays}</span> <br />
+                            <span>{meetDays}</span> 
+                            {meetDays && <br />}
                             <span>{meetTime}</span>
                           </td>
 
@@ -208,55 +217,17 @@ export const EnrolledView = ({ events, title }: EventProps) => {
                           <td className="py-4">Letter</td>
 
                           {/*  */}
-                          <td className="py-4 px-4 justify items-center justify-center">
+                          <td className="p-4 items-center justify-center">
                             <button
                               className="flex justify-center items-center"
                               onClick={() => {
-                                if (showDropdown == sectionCode) {
-                                  setShowDropdown("");
-                                } else {
-                                  setShowDropdown(sectionCode);
-                                }
+                                handleDelete(sectionCode);
                               }}
                             >
-                              <BsChevronDown
-                                className={cn(
-                                  "text-xl",
-                                  showDropdown == sectionCode
-                                    ? "rotate-180"
-                                    : ""
-                                )}
-                              />
+                              <RiCloseCircleLine className="text-2xl text-red" />
                             </button>
                           </td>
                         </tr>
-                        {/* Conditionally render description row */}
-                        {showDropdown == sectionCode && (
-                          <tr className="animate-appear relative z-0">
-                            <td colSpan={999}>
-                              <div className="grid grid-cols-[repeat(2,1fr)] justify-between">
-                                <div>
-                                  <h6 className="text-uciblue font-medium">
-                                    Edit Class
-                                  </h6>
-                                  <input
-                                    type="checkbox"
-                                    name="editclass"
-                                    className="inline-block"
-                                  />
-                                  <span className="px-3">Change to P/NP</span>
-                                </div>
-                                <div>
-                                  <h6 className="text-uciblue font-medium">
-                                    Actions
-                                  </h6>
-                                  <input type="checkbox" name="enrollnow" />
-                                  <span className="px-3">Change to P/NP</span>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
                       </>
                     );
                   }
@@ -326,9 +297,9 @@ const WaitlistView = ({ waitlist }: WaitlistProps) => {
                         {days + " " + hourToTime(time ?? 0)}
                       </td>
                       <td className="py-4">{instructor}</td>
-                      <td className="py-4 px-4 justify items-center justify-center">
+                      <td className="py-4 px-4 items-center justify-center">
                         <button className="flex justify-center items-center">
-                          <BsChevronDown className="text-xl" />
+                          <RiCloseCircleLine className="text-2xl text-red" />
                         </button>
                       </td>
                     </tr>
@@ -375,6 +346,16 @@ const ListView = ({ events, waitlist }: Props) => {
       ) : (
         <WaitlistView waitlist={waitlist} />
       )}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        theme="light"
+      />
     </div>
   );
 };

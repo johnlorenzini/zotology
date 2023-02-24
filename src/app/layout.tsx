@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import { Suspense } from "react";
 import WelcomeLogin from "./WelcomeLogin";
 
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
@@ -51,6 +52,7 @@ export default async function RootLayout({
               {children}
         </SupabaseProvider>
         <Footer />
+        
       </body>
     </html>
   );
