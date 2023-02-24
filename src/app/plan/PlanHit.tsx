@@ -5,31 +5,28 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "../lib/components/legacy/ui/accordion";
+} from "../../lib/components/legacy/ui/accordion";
 import { Slide, Zoom, Flip, Bounce } from "react-toastify";
 
 import { Highlight } from "react-instantsearch-hooks-web";
 import { supabase } from "@/lib/supabase/utils/supabase-secret";
 
 import cn from "classnames";
-import { useEffect, useState } from "react";
+import { useEffect, useState, SetStateAction } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useUserContext } from "./SectionsContext";
 
-import { CourseSection } from "./siteConfig"
+import { CourseSection } from "../siteConfig";
 import { useSearchParams } from "next/navigation";
 
 type props = {
   hit: any;
+  setPlanCourses: React.Dispatch<SetStateAction<CourseSection[]>>;
 };
 
-const Hit = ({ hit }: props) => {
-  const { courseContext, setCourseContext } = useUserContext();
+const Hit = ({ hit, setPlanCourses }: props) => {
   const [session, setSession] = useState(null);
-
-  const searchParams = useSearchParams();
 
   // async function getClasses(){
   //   const {data: {session}} = await supabase.auth.getSession();
@@ -47,16 +44,6 @@ const Hit = ({ hit }: props) => {
   //   }
   // }
 
-  function checkEnrolled(courseCode: string) {
-    if (courseContext.length > 0) {
-      courseContext.forEach((courseDesc: CourseSection) => {
-        if (courseCode == courseDesc.sectionCode) {
-          return true;
-        }
-      });
-    }
-    return false;
-  }
   async function handleUnenroll(courseCode: string) {
     const {
       data: { session },
@@ -71,7 +58,7 @@ const Hit = ({ hit }: props) => {
         const sections = data.at(0).sections;
         const id = data.at(0).id;
         const ucinetid = data.at(0).ucinetid;
-        if (sections.includes(courseCode)) {
+        if (sections && sections.includes(courseCode)) {
           sections.splice(sections.indexOf(courseCode), 1);
 
           const { data, error } = await supabase
@@ -99,49 +86,48 @@ const Hit = ({ hit }: props) => {
     }
   }
 
+  const searchParams = useSearchParams();
+
   async function handleSubmit(courseCode: string) {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    const data = searchParams.get("id");
 
-    if (session) {
-      const { data, error } = await supabase
-        .from("users")
+    if (data) {
+      // query for the plan course
+      supabase
+        .from("plans")
         .select()
-        .eq("id", session.user.id);
+        .eq("id", data)
+        .then((result) => {
+          // take the plan data and query their description
+          const sections = result.data?.at(0)?.courses ?? [];
+          const planId = result.data?.at(0)?.id;
 
-      if (data) {
-        const sections = data.at(0).sections;
-        const id = data.at(0).id;
-        const ucinetid = data.at(0).ucinetid;
-        if (!sections.includes(courseCode)) {
-          // Add course description to local states
-          supabase
-            .from("sections")
-            .select()
-            .eq("sectionCode", courseCode) // ["XXXXX", "XXXXX", "XXXXX"]
-            .then((result) => {
-              if (result) {
-                console.log("added course", result.data?.at(0));
-                setCourseContext(courses => [...courses, result.data?.at(0)])
-              }
-            });
+          if (!sections.includes(courseCode)) {
+            // Add course description to local states
+            supabase
+              .from("sections")
+              .select()
+              .eq("sectionCode", courseCode) // ["XXXXX", "XXXXX", "XXXXX"]
+              .then((result) => {
+                if (result) {
+                  console.log("added course", result.data?.at(0));
+                  setPlanCourses((courses) => [...courses, result.data?.at(0)]);
+                }
+              });
 
-          // Update new course code on database
-          sections.push(courseCode);
+            // Update new course code on database
+            sections.push(courseCode);
 
-          const { data, error } = await supabase
-            .from("users")
-            .update({ id: id, ucinetid: ucinetid, sections: sections })
-            .eq("id", id)
-            .select();
+            supabase
+              .from("plans")
+              .update({ id: planId, courses: sections })
+              .eq("id", planId)
+              .then((result) => {
+                console.log("added")
+              })
 
-
-          if (error) {
-            console.log(error);
-          }
-          if (data) {
-            toast.success("Enrolled!", {
+          } else {
+            toast.error("ERROR: You already have this in your plan!", {
               position: "top-right",
               autoClose: 3000,
               hideProgressBar: false,
@@ -151,30 +137,7 @@ const Hit = ({ hit }: props) => {
               transition: Slide,
             });
           }
-        } else {
-          toast.error("ERROR: You are already enrolled in this class!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            progress: undefined,
-            theme: "light",
-            transition: Slide,
-          });
-        }
-      }
-
-      //   if(data){
-      //     const response = await supabase
-      //       .from("users")
-      //       .update({sections : [...data[0].sections, courseCode]})
-      //       .eq("id", session.user.id)
-
-      //     if(response.error){
-      //       console.log(response.error)
-      //     }
-
-      // }
+        });
     }
   }
 
@@ -319,31 +282,13 @@ const Hit = ({ hit }: props) => {
                           </td>
                           <td>
                             <button
+                              onClick={() => {
+                                handleSubmit(sectionCode);
+                              }}
                               className="px-3 py-1 text-sm bg-blue-200 border-2 border-blue-700 font-bold rounded-xl hover:bg-blue-700 transition ease-in-out"
-                              >
-                                Plan
-                              </button>
-                          </td>
-                          <td>
-                            {(checkEnrolled(sectionCode) == true) ? (
-                              <button
-                                className="px-3 py-1 text-sm bg-rose-200 border-2 border-rose-700 font-bold rounded-xl hover:bg-rose-700 transition ease-in-out"
-                                onClick={() => {
-                                  handleUnenroll(sectionCode);
-                                }}
-                              >
-                                Unenroll
-                              </button>
-                            ) : (
-                              <button
-                                className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-bold rounded-xl hover:bg-green-700 transition ease-in-out"
-                                onClick={() => {
-                                  handleSubmit(sectionCode);
-                                }}
-                              >
-                                Enroll
-                              </button>
-                            )}
+                            >
+                              Plan
+                            </button>
                           </td>
                         </tr>
                       </>

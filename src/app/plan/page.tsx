@@ -1,12 +1,13 @@
 "use client";
 import { supabase } from "@/lib/supabase/utils/supabase-secret";
-import { useEffect, useState, useRef } from "react";
-import SearchWrapper from "../(homepage)/SearchWrapper";
+import { useEffect, useState, useRef, useContext } from "react";
+import PlanSearchWrapper from "./PlanSearchWrapper";
 import FuzzySearch from "../FuzzySearch";
 import ListView, { EnrolledView } from "../ListView";
 import { useSearchParams } from "next/navigation";
 import { sampleEvents, sampleWaitlist } from "../siteConfig";
 import { Slide, Zoom, Flip, Bounce } from "react-toastify";
+import PlanList from "../PlanList";
 
 import { useRouter } from "next/navigation";
 import {
@@ -20,7 +21,7 @@ import { CourseSection } from "../siteConfig";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import SectionsContext from "../SectionsContext";
+import PlanSearch from "./PlanSearch";
 
 export default function Home() {
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function Home() {
 
   const handleInputChange = (event: any) => {
     setText(event.target.value);
-    event.target.style.width = `${event.target.scrollWidth}px`;
+    event.target.style.width = `${event.target.value.length}ch`;
   };
 
   const handleEnterKey = (event: React.KeyboardEvent) => {
@@ -110,13 +111,16 @@ export default function Home() {
                 .then((allCourses) => {
                   if (allCourses?.data) {
                     setPlanCourses(allCourses?.data);
+                    console.log(allCourses?.data);
                   }
                 });
             }
           });
       }
     }
-    retrievePlan();
+    retrievePlan().then(() => {
+      console.log(planCourses);
+    });
   }, [data]);
 
   // useEffect(() => {
@@ -144,86 +148,82 @@ export default function Home() {
     <main className="min-h-screen w-full flex justify-center">
       {fetchError && <div className="h-screen">{fetchError}</div>}
       {planData && (
-        <SectionsContext>
-          <div className="w-full flex flex-col justify-start items-center max-w-screen-2xl pb-16">
-            {/* Back to home */}
-            <div className="w-full flex justify-start px-10 py-5">
-              <Link
-                href="/"
-                className="flex items-center text-lg font-light text-gray-700 font-body"
+        <div className="w-full flex flex-col justify-start items-center max-w-screen-2xl pb-16">
+          {/* Back to home */}
+          <div className="w-full flex justify-start px-10 py-5">
+            <Link
+              href="/"
+              className="flex items-center text-lg font-light text-gray-700 font-body"
+            >
+              <MdOutlineKeyboardArrowLeft className="text-xl" />
+              <span className="font-semibold">Home</span>
+            </Link>
+            {/* Delete Plan Button */}
+            <div className="w-full flex justify-end">
+              <button
+                onClick={deletePlan}
+                className="flex items-center text-lg font-light text-rose-900 font-body"
               >
-                <MdOutlineKeyboardArrowLeft className="text-xl" />
-                <span className="font-semibold">Home</span>
-              </Link>
-              {/* Delete Plan Button */}
-              <div className="w-full flex justify-end">
-                <button
-                  onClick={deletePlan}
-                  className="flex items-center text-lg font-light text-rose-900 font-body"
-                >
-                  <span className="font-semibold">Delete Plan</span>
-                </button>
-              </div>
+                <span className="font-semibold">Delete Plan</span>
+              </button>
             </div>
+          </div>
 
-            {/* Grid layout */}
-            <div className="flex-grow grid grid-flow-row-dense gap-6 font-body grid-cols-12 w-full px-10">
-              {/* Left: search to add classes */}
-              <div className="card col-span-12 lg:col-span-6 p-5">
-                <SearchWrapper />
-              </div>
-              {/* Right: edit current plan */}
-              <div className="card col-span-12 lg:col-span-6 p-5">
-                <div className="flex gap-3">
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={text}
-                      onChange={handleInputChange}
-                      onKeyDown={handleEnterKey}
-                      className="py-2 text-2xl font-semibold text-cardtitle font-title focus:outline-none"
+          {/* Grid layout */}
+          <div className="flex-grow grid grid-flow-row-dense gap-6 font-body grid-cols-12 w-full px-10">
+            {/* Left: search to add classes */}
+            <div className="card col-span-12 lg:col-span-6 p-5">
+              <PlanSearchWrapper setPlanCourses={setPlanCourses}/>
+            </div>
+            {/* Right: edit current plan */}
+            <div className="card col-span-12 lg:col-span-6 p-5">
+              <div className="flex gap-3">
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={text}
+                    onChange={handleInputChange}
+                    onKeyDown={handleEnterKey}
+                    className="pt-2 text-2xl font-semibold text-cardtitle font-title focus:outline-none border-b-2 border-gray-400"
+                    // @ts-ignore
+                    onBlur={() => (inputRef.current.style.width = "")}
+                    ref={inputRef}
+                    style={{
+                      minWidth: "50px",
                       // @ts-ignore
-                      onBlur={() => (inputRef.current.style.width = "")}
-                      ref={inputRef}
-                      style={{
-                        minWidth: "50px",
-                        // @ts-ignore
-                        width: `${inputRef.current?.scrollWidth}px`,
-                      }}
-                    />
-                  ) : (
-                    <h3
-                      onClick={handleClick}
-                      className="py-2 text-2xl font-semibold text-cardtitle font-title"
-                    >
-                      {text}
-                    </h3>
-                  )}
-                  <button
+                      width: `${inputRef.current?.scrollWidth}px`,
+                    }}
+                  />
+                ) : (
+                  <h3
                     onClick={handleClick}
-                    className="text-2xl text-uciblue"
+                    className="py-2 text-2xl font-semibold text-cardtitle font-title"
                   >
-                    {isEditing ? <RiCheckboxCircleLine /> : <RiEdit2Fill />}{" "}
+                    {text}
+                  </h3>
+                )}
+                <button onClick={handleClick} className="text-2xl text-uciblue">
+                  {isEditing ? <RiCheckboxCircleLine /> : <RiEdit2Fill />}{" "}
+                </button>
+                {isEditing && (
+                  <button
+                    onClick={() => {
+                      console.log("stop editing");
+                      setIsEditing(false);
+                      setText(planData?.data?.at(0)?.name);
+                    }}
+                    className="text-2xl text-rose-500"
+                  >
+                    <RiCloseCircleLine />
                   </button>
-                  {isEditing && (
-                    <button
-                      onClick={() => {
-                        setIsEditing(false);
-                        setText(planData?.data?.at(0)?.name);
-                      }}
-                      className="text-2xl text-rose-500"
-                    >
-                      <RiCloseCircleLine />
-                    </button>
-                  )}
-                </div>
-                <div>
-                  <EnrolledView events={planCourses} />
-                </div>
+                )}
+              </div>
+              <div>
+                <PlanList events={planCourses} setPlanCourses={setPlanCourses} />
               </div>
             </div>
           </div>
-        </SectionsContext>
+        </div>
       )}
       <ToastContainer
         position="top-right"
