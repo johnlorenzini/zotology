@@ -59,10 +59,8 @@ const CalendarView = ({ events }: Props) => {
         };
         parsedEvents.push(parsedEvent);
       });
-
-      setCalendarEvents(parsedEvents);
- 
     });
+    setCalendarEvents(parsedEvents);
   }, [events]);
 
   return (

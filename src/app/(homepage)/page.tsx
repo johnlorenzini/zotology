@@ -9,8 +9,9 @@ import { InstantSearch } from "react-instantsearch-hooks-web";
 import SearchWrapper from "./SearchWrapper";
 import { createClient } from "@/lib/supabase/utils/supabase-server";
 import SectionsContext from "../SectionsContext";
-import {ToastContainer, toast} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Hit from "../Hit";
+// import {ToastContainer, toast} from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 export default async function Home() {
   const supabase = createClient();
@@ -31,7 +32,7 @@ export default async function Home() {
                 <div className="font-body absolute right-10 top-2">
                   <p className="font-semibold">Spring 2023</p>
                 </div>
-                <SearchWrapper />
+                <SearchWrapper/>
               </div>
 
               {/* Grid layout container */}

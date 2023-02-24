@@ -37,7 +37,7 @@ const CourseView = ({}: Props) => {
             // take the plan data and query their description
             const sectionArray = result.data?.at(0)?.sections;
 
-            let sectionsLength = sectionArray.length ?? 0;
+            let sectionsLength = sectionArray?.length ?? 0;
 
             if (sectionsLength > 0) {
               supabase

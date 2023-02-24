@@ -49,12 +49,17 @@ export const siteConfig: SiteConfig = {
 export interface CourseSection {
   courseTitle?: string;
   courseFull?: string;
-  finalExam: string;
+  finalExam?: string;
   sectionCode: string;
   sectionType: string;
   units: string;
   instructors: Array<string>;
   meetings: Array<any>;
+  maxCapacity: string;
+  numCurrentlyEnrolled?: {
+    totalEnrolled?: string;
+    sectionEnrolled?: string;
+  }
   [otherOptions: string]: unknown;
 }
 
