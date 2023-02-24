@@ -188,11 +188,7 @@ const Hit = ({ hit, setPlanCourses }: props) => {
                   <th className="px-1 text-center">Location</th>
                   <th className="px-1 text-center">Time</th>
                   <th className="px-1 text-center">Instructor</th>
-                  <th className="px-1 text-center">Units</th>
                   <th className="px-1 text-center">Rstr</th>
-                  <th className="px-1 text-center">Nor</th>
-                  <th className="px-1 text-center">Req</th>
-                  <th className="px-1 text-center">WL</th>
                   <th className="px-1 text-center">Enrolled</th>
                   <th className="px-1 text-center"></th>
                   <th className="px-1 text-center"></th>
@@ -270,13 +266,7 @@ const Hit = ({ hit, setPlanCourses }: props) => {
                               {instructors[0]}
                             </Highlight>
                           </td>
-                          <td className="px-1 text-center">{units}</td>
                           <td className="px-1 text-center">{restrictions}</td>
-                          <td className="px-1 text-center">
-                            {numNewOnlyReserved}
-                          </td>
-                          <td className="px-1 text-center">{numRequested}</td>
-                          <td className="px-1 text-center">{numOnWaitlist}</td>
                           <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                           </td>

@@ -184,7 +184,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
         console.log(courseString, courseData);
 
         return (
-          <div className="w-full" key={i}>
+          <div className="w-full overflow-x-scroll z-0" key={i}>
             <h4 className="text-xl font-semibold">{courseString}</h4>
             <h5 className="text-lg">{courseData.courseTitle}</h5>
             <span className=" text-uciblue">Final: {courseData.finalExam}</span>
