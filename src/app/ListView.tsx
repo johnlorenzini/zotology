@@ -1,6 +1,6 @@
 "use client";
 import { Circle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsChevronDown } from "react-icons/bs";
 import { CourseSection } from "./siteConfig";
 
@@ -38,41 +38,86 @@ interface CourseData {
 }
 
 export const EnrolledView = ({ events, title }: EventProps) => {
-  var mappedEvents: Map<string, CourseData> = new Map();
+  var [allEvents, setAllEvents] = useState<Map<string, CourseData>>(new Map());
 
   const [showDropdown, setShowDropdown] = useState("");
 
-  events.forEach((evt) => {
-    // console.log(evt);
-    const { deptCode, courseNumber } = evt;
-    let courseString = `${deptCode} ${courseNumber}`;
+  // console.log(events);
 
-    if (!mappedEvents.get(courseString)) {
-      // if not present, add to map
-      const { courseTitle, finalExam } = evt;
-      mappedEvents.set(courseString, {
-        courseTitle,
-        finalExam,
-        sections: [evt],
-      });
-    } else {
-      // already present, add to maps array
-      if (["Lec", "Sem"].includes(evt.sectionType)) {
+  useEffect(() => {
+    console.log('events', events)
+    var mappedEvents: Map<string, CourseData> = new Map();
+
+    events.forEach((evt) => {
+      console.log(evt);
+      const { deptCode, courseNumber } = evt;
+      let courseString = `${deptCode} ${courseNumber}`;
+
+      if (!mappedEvents.get(courseString)) {
+        // if not present, add to map
         const { courseTitle, finalExam } = evt;
-
-        const existingSections = mappedEvents.get(courseString)?.sections ?? [];
-
-        // always add lecture or seminar to front
         mappedEvents.set(courseString, {
           courseTitle,
           finalExam,
-          sections: [evt, ...existingSections],
+          sections: [evt],
         });
       } else {
-        mappedEvents.get(courseString)?.sections?.push(evt);
+        // already present, add to maps array
+        if (["Lec", "Sem"].includes(evt.sectionType)) {
+          const { courseTitle, finalExam } = evt;
+
+          const existingSections =
+            mappedEvents.get(courseString)?.sections ?? [];
+
+          // always add lecture or seminar to front
+          mappedEvents.set(courseString, {
+            courseTitle,
+            finalExam,
+            sections: [evt, ...existingSections],
+          });
+        } else {
+          mappedEvents.get(courseString)?.sections?.push(evt);
+        }
       }
-    }
-  });
+
+      console.log('map', mappedEvents)
+    });
+
+    setAllEvents(mappedEvents)
+  }, [events]);
+
+  useEffect(() => {console.log('all events', allEvents)}, [allEvents])
+  // events.forEach((evt) => {
+  //   // console.log(evt);
+  //   const { deptCode, courseNumber } = evt;
+  //   let courseString = `${deptCode} ${courseNumber}`;
+
+  //   if (!mappedEvents.get(courseString)) {
+  //     // if not present, add to map
+  //     const { courseTitle, finalExam } = evt;
+  //     mappedEvents.set(courseString, {
+  //       courseTitle,
+  //       finalExam,
+  //       sections: [evt],
+  //     });
+  //   } else {
+  //     // already present, add to maps array
+  //     if (["Lec", "Sem"].includes(evt.sectionType)) {
+  //       const { courseTitle, finalExam } = evt;
+
+  //       const existingSections = mappedEvents.get(courseString)?.sections ?? [];
+
+  //       // always add lecture or seminar to front
+  //       mappedEvents.set(courseString, {
+  //         courseTitle,
+  //         finalExam,
+  //         sections: [evt, ...existingSections],
+  //       });
+  //     } else {
+  //       mappedEvents.get(courseString)?.sections?.push(evt);
+  //     }
+  //   }
+  // });
 
   // console.log(mappedEvents);
 
@@ -81,7 +126,7 @@ export const EnrolledView = ({ events, title }: EventProps) => {
       <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
         {title && "Enrolled"}
       </h3>
-      {Array.from(mappedEvents)?.map((mapEntry, i) => {
+      {Array.from(allEvents)?.map((mapEntry, i) => {
         const [courseString, courseData] = mapEntry;
         // console.log(courseString, courseData);
 
@@ -191,13 +236,21 @@ export const EnrolledView = ({ events, title }: EventProps) => {
                             <td colSpan={999}>
                               <div className="grid grid-cols-[repeat(2,1fr)] justify-between">
                                 <div>
-                                  <h6 className="text-uciblue font-medium">Edit Class</h6>
-                                  <input type="checkbox" name="editclass" className="inline-block"/>
+                                  <h6 className="text-uciblue font-medium">
+                                    Edit Class
+                                  </h6>
+                                  <input
+                                    type="checkbox"
+                                    name="editclass"
+                                    className="inline-block"
+                                  />
                                   <span className="px-3">Change to P/NP</span>
                                 </div>
                                 <div>
-                                  <h6 className="text-uciblue font-medium">Actions</h6>
-                                  <input type="checkbox" name="enrollnow"/>
+                                  <h6 className="text-uciblue font-medium">
+                                    Actions
+                                  </h6>
+                                  <input type="checkbox" name="enrollnow" />
                                   <span className="px-3">Change to P/NP</span>
                                 </div>
                               </div>

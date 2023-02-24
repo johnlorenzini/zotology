@@ -36,7 +36,6 @@ const UserNav = () => {
 
   const login = async () => {
     signInWithGoogle();
-    const session = await supabase.auth.getSession();
   };
 
   useEffect(() => {
@@ -72,6 +71,7 @@ const UserNav = () => {
     if (error) {
       console.log(error);
     }
+    login();
   }
   return (
     <>

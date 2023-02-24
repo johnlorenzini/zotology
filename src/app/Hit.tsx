@@ -9,6 +9,7 @@ import {
 import { BsPlusCircle, BsFillCheckCircleFill } from "react-icons/bs";
 import { Highlight } from "react-instantsearch-hooks-web";
 import { Separator } from "../lib/components/legacy/ui/separator";
+import {supabase} from "@/lib/supabase/utils/supabase-secret";
 
 import cn from "classnames";
 
@@ -18,6 +19,18 @@ type props = {
 
 const Hit = ({ hit }: props) => {
   const [classes, setClasses] = useLocalStorage("classes", []);
+
+  async function handleSubmit(courseCode : string){
+    const {data: {session}} = await supabase.auth.getSession();
+    if(session){
+      const {data, error} = await supabase
+        .from("users")
+        .select()
+        .eq("id", session.user.id)
+        
+        
+    }
+  }
 
   if (!hit) return <></>;
 
@@ -155,24 +168,13 @@ const Hit = ({ hit }: props) => {
                           <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                           </td>
-                          <td
-                            onClick={() => {
-                              // @ts-ignore
-                              setClasses([...classes, sectionCode]);
-                            }}
-                            className={cn(
-                              "px-1 text-center",
-                              isHeader ? "rounded-r-md" : ""
-                            )}
-                          >
-                            {
-                              // @ts-ignore
-                              classes?.includes(sectionCode) ? (
-                                <BsFillCheckCircleFill />
-                              ) : (
-                                <BsPlusCircle />
-                              )
-                            }
+                          <td>
+                            <button
+                              className="px-4 py-2 bg-uciblue text-white font-bold rounded-full hover:bg-cardtitle transition ease-in-out"
+                              onClick={() => {handleSubmit(sectionCode)}}
+                            >
+                              Add
+                            </button>
                           </td>
                         </tr>
                       </>

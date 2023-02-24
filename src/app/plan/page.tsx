@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { sampleEvents, sampleWaitlist } from "../siteConfig";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import Link from "next/link";
+import { CourseSection } from "../siteConfig";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -15,6 +16,8 @@ export default function Home() {
 
   const [planData, setPlanData] = useState<any>(null);
   const [fetchError, setFetchError] = useState<any>(null);
+
+  const [planCourses, setPlanCourses] = useState<Array<CourseSection>>([]);
 
   useEffect(() => {
     async function retrievePlan() {
@@ -24,17 +27,50 @@ export default function Home() {
           .select("name, termId, created_at, updated_at, courses")
           .eq("id", data)
           .then((result) => {
-            setPlanData(result.data?.at(0));
+            setPlanData(result);
+
+            const resultData = result.data?.at(0);
+
+            var allCourses: Array<CourseSection> = [];
+
+            let courseLength = resultData?.courses?.length ?? 0;
+
+            if (courseLength > 0) {
+              // @ts-ignore
+              resultData?.courses.forEach((course) => {
+                supabase
+                  .from("sections")
+                  .select()
+                  .eq("sectionCode", course)
+                  .then((result) => {
+                    // console.log("added", course);
+                    allCourses.push(result.data?.at(0));
+                    // console.log(allCourses)
+
+                    if (allCourses.length == courseLength) {
+                      setPlanCourses(allCourses);
+                    }
+                  });
+              });
+            }
           });
+
+        // supabase
+        //   .from("sections")
+        //   .select()
+        //   .eq("sectionCode", "36100")
+        //   .then((r) => {
+        //     console.log("die", r, resultData?.courses);
+        //     setPlanCourses([r.data?.at(0)]);
+        //   });
       }
     }
     retrievePlan();
   }, [data]);
 
-  useEffect(() => {
-    console.log(planData)
-  }, [planData])
-
+  // useEffect(() => {
+  //   console.log(planData);
+  // }, [planData]);
 
   // const authsession = supabase.auth.getSession();
   // if (authsession) {
@@ -56,8 +92,11 @@ export default function Home() {
       {planData && (
         <div className="w-full flex flex-col justify-center items-center max-w-screen-2xl pb-16">
           {/* Back to home */}
-          <div className="w-full flex justify-start px-10 py-5">  
-            <Link href="/" className="flex items-center text-lg font-light text-gray-700 font-body">
+          <div className="w-full flex justify-start px-10 py-5">
+            <Link
+              href="/"
+              className="flex items-center text-lg font-light text-gray-700 font-body"
+            >
               <MdOutlineKeyboardArrowLeft className="text-xl" />
               <span>Back to home</span>
             </Link>
@@ -71,11 +110,18 @@ export default function Home() {
             </div>
             {/* Right: edit current plan */}
             <div className="card col-span-12 lg:col-span-6 p-5">
+              {
+                (planCourses.length == 0) && (
+                  <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
+                    No Courses for this plan
+                  </h3>
+                )  
+              }
               <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
                 {planData.name}
               </h3>
               <div>
-                <EnrolledView events={sampleEvents} />
+                <EnrolledView events={planCourses} />
               </div>
             </div>
           </div>
