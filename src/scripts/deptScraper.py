@@ -1,11 +1,8 @@
 import json
+impor
 
-depts = set()
-with open('cleaned.json', 'r') as openfile:
+sections = []
+with open('sections2.json', 'r' ) as openfile:
     json_object = json.load(openfile)
-    for obj in json_object:
-        depts.add(obj['deptCode'])
-    
-with open('depts.json', 'w') as outfile:
-    json.dump(list(depts), outfile)
+    for section in json_object:
         
