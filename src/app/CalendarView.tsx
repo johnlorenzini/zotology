@@ -64,7 +64,7 @@ const CalendarView = ({ events }: Props) => {
   }, [events]);
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col overflow-x-scroll">
       {/* Title */}
       <div className="w-full p-5 pb-[10px] z-10 bg-white">
         <h3 className="text-2xl font-semibold text-cardtitle font-title">

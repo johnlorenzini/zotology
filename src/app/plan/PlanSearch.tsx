@@ -71,7 +71,7 @@ const PlanSearch = ({ setPlanCourses }: Props) => {
         {showResults && (
           /* @ts-ignore */
           <Accordion
-            className="absolute top-0 w-full max-h-[1450px] overflow-y-scroll"
+            className="absolute top-0 w-full max-h-screen overflow-y-scroll"
             type="multiple"
             defaultValue=""
             collapsible
