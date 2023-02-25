@@ -15,10 +15,6 @@ const UserContext = createContext<ContextValue>({
 const SectionsContext = ({ children }: { children: React.ReactNode }) => {
   const [courses, setCourses] = useState<any>([]);
 
-  useEffect(() => {
-    console.log('courses in context updated', courses)
-  }, [courses])
-
   return (
     <>
       <UserContext.Provider

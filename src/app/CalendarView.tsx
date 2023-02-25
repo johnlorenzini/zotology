@@ -29,7 +29,6 @@ const CalendarView = ({ events }: Props) => {
   var parsedEvents: Array<Event> = [];
 
   useEffect(() => {
-    console.log('parsing calendar')
 
     events.forEach((evt) => {
       const { meetings, courseTitle, courseFull, sectionType } = evt;
