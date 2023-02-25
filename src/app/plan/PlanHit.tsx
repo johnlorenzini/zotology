@@ -110,7 +110,6 @@ const Hit = ({ hit, setPlanCourses }: props) => {
               .eq("sectionCode", courseCode) // ["XXXXX", "XXXXX", "XXXXX"]
               .then((result) => {
                 if (result) {
-                  console.log("added course", result.data?.at(0));
                   setPlanCourses((courses) => [...courses, result.data?.at(0)]);
                 }
               });
@@ -123,7 +122,17 @@ const Hit = ({ hit, setPlanCourses }: props) => {
               .update({ id: planId, courses: sections })
               .eq("id", planId)
               .then((result) => {
-                console.log("added")
+                if (result) {
+                  toast.success("Added!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Slide,
+                  });
+                }
               })
 
           } else {

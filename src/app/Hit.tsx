@@ -122,7 +122,6 @@ const Hit = ({ hit }: props) => {
             .eq("sectionCode", courseCode) // ["XXXXX", "XXXXX", "XXXXX"]
             .then((result) => {
               if (result) {
-                console.log("added course", result.data?.at(0));
                 setCourseContext(courses => [...courses, result.data?.at(0)])
               }
             });
