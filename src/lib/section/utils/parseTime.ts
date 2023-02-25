@@ -44,7 +44,6 @@ export const parseTime = (time: string): ParsedTime => {
   const regMatch = regex.exec(time)!;
 
   if (!regMatch) {
-    console.log("string doesnt match")
     return {
       days: [],
       start: "",

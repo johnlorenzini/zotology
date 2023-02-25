@@ -111,7 +111,6 @@ export default function Home() {
                 .then((allCourses) => {
                   if (allCourses?.data) {
                     setPlanCourses(allCourses?.data);
-                    console.log(allCourses?.data);
                   }
                 });
             }
@@ -119,7 +118,6 @@ export default function Home() {
       }
     }
     retrievePlan().then(() => {
-      console.log(planCourses);
     });
   }, [data]);
 
@@ -208,7 +206,6 @@ export default function Home() {
                 {isEditing && (
                   <button
                     onClick={() => {
-                      console.log("stop editing");
                       setIsEditing(false);
                       setText(planData?.data?.at(0)?.name);
                     }}

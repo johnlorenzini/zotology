@@ -179,7 +179,7 @@ const Schedule = ({ events }: ScheduleProps) => {
           ))}
           <hr className="absolute bottom-0 min-h-[3px] mt-4 rounded-lg w-full border-none ucigold" />
         </div>
-        <div className="flex items-stretch grow">
+        <div className="flex items-stretch overflow-x-scroll grow">
           <ScheduleTimes start={start} hours={hours} />
           <ScheduleDay
             key={0}

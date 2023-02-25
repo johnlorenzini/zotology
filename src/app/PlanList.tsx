@@ -103,7 +103,6 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
 
   async function handleDelete(sectionCode: string) {
     const planId = searchParams.get("id");
-    console.log(planId)
 
     const {
       data: { session },
@@ -116,7 +115,6 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
         .eq("id", planId);
 
       const courses = data?.at(0).courses;
-      console.log('deleting', courses)
 
       if (courses && courses.length > 0) {
         // update plan locally
@@ -136,10 +134,9 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
           .update({ id: planId, courses: newSections })
           .eq("id", planId)
           .then((result) => {
-            console.log("removed")
           })
 
-        toast.success("Removed from plan", {
+        toast.success("Removed from Plan!", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -154,7 +151,6 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
   const [ShowDropdown, setShowDropdown] = useState("");
 
   useEffect(() => {
-    console.log("plan events", events);
 
     var mappedEvents: Map<string, CourseData> = new Map();
 
@@ -200,7 +196,6 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
       </h3>
       {Array.from(allEvents)?.map((mapEntry, i) => {
         const [courseString, courseData] = mapEntry;
-        console.log(courseString, courseData);
 
         return (
           <div className="w-full overflow-x-scroll z-0" key={i}>
