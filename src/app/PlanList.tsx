@@ -311,7 +311,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
     {
       allEvents.size == 0 && (
         <div className="flex flex-col items-center justify-start ">
-          <h3 className="text-2xl font-semibold text-start text-uciblue">You haven&apos;t planned any courses (Yet!).</h3>
+          <h3 className="text-2xl font-semibold text-center text-uciblue">You haven&apos;t planned any courses (Yet!).</h3>
           <p className="text-center text-cardtitle">Find courses by name, number, department, instructor or 5-digit code by searching for them in the search bar.</p>
         </div>
       )
