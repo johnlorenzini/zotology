@@ -97,7 +97,7 @@ const FuzzySearch = (props: props) => {
         {showResults && (
           /* @ts-ignore */
           <Accordion
-            className="absolute top-0 w-full max-h-[1450px] overflow-y-scroll"
+            className="scrollbar-hide absolute top-0 w-full max-h-[1450px] overflow-y-scroll"
             type="multiple"
             defaultValue=""
             collapsible

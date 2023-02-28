@@ -86,7 +86,7 @@ const Hit = ({ hit }: props) => {
           if (data) {
             toast.success("Unenrolled!", {
               position: "top-right",
-              autoClose: 3000,
+              autoClose: 1500,
               hideProgressBar: false,
               closeOnClick: true,
               progress: undefined,
@@ -142,7 +142,7 @@ const Hit = ({ hit }: props) => {
           if (data) {
             toast.success("Enrolled!", {
               position: "top-right",
-              autoClose: 3000,
+              autoClose: 1500,
               hideProgressBar: false,
               closeOnClick: true,
               progress: undefined,
@@ -153,7 +153,7 @@ const Hit = ({ hit }: props) => {
         } else {
           toast.error("ERROR: You are already enrolled in this class!", {
             position: "top-right",
-            autoClose: 3000,
+            autoClose: 1500,
             hideProgressBar: false,
             closeOnClick: true,
             progress: undefined,
