@@ -195,7 +195,7 @@ export default function Home() {
                 ) : (
                   <h3
                     onClick={handleClick}
-                    className="py-2 text-2xl font-semibold text-cardtitle font-title"
+                    className="py-2 text-2xl font-semibold text-cardtitle font-title truncate"
                   >
                     {text}
                   </h3>
