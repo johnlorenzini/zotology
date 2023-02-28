@@ -7,7 +7,6 @@ type Props = {
   plans: object;
 };
 import { useRouter } from "next/navigation";
-import { Circle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const sampleCards = [

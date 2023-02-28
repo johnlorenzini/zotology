@@ -59,7 +59,7 @@ const CourseView = ({}: Props) => {
   return (
     <>
       {/* List View */}
-      <div className="card col-span-12 sm:col-span-12 lg:col-span-6 h-[60rem] pr-5">
+      <div className="card col-span-12 sm:col-span-12 lg:col-span-6 pb-4 md:pb-0 md:h-[60rem] pr-5">
         <ListView events={courseContext} waitlist={sampleWaitlist} />
       </div>
       {/* Calendar View */}
