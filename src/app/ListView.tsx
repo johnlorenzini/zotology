@@ -79,7 +79,7 @@ export const EnrolledView = ({ events, title }: EventProps) => {
 
         toast.success("Unenrolled!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
           progress: undefined,
@@ -252,6 +252,17 @@ export const EnrolledView = ({ events, title }: EventProps) => {
 };
 
 const WaitlistView = ({ waitlist }: WaitlistProps) => {
+  function playToast(){
+    toast.error("This data cannot be deleted!", {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      progress: undefined,
+      theme: "light",
+      transition: Slide,
+    });
+  }
   return (
     <div>
       <div className="h-24 w-full text-md md:text-xl text-center px-4 flex items-center justify-center font-semibold rounded-full bg-yellow-200 border-2 border-yellow-600 mt-4 mb-2">Because no Spring 2023 courses have an active waitlist, this data is for demonstration purposes only.</div>
@@ -283,7 +294,7 @@ const WaitlistView = ({ waitlist }: WaitlistProps) => {
                 <table className="w-full text-left mt-2">
                   <thead className="bg-[#e4e4e0] rounded-lg  text-semibold">
                     <tr className="text-center">
-                      <th className="py-1"></th>
+                    <th className="py-1 rounded-l-sm overflow-hidden"></th>
                       <th className="py-1">Position</th>
                       <th className="py-1">Type</th>
                       <th className="py-1">Location</th>
@@ -293,11 +304,18 @@ const WaitlistView = ({ waitlist }: WaitlistProps) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="text-center">
-                      <td className="py-1">
-                        <button className="w-8 h-full rounded-lg bg-[#ffd027] text-center flex py-4 px-1 items-center justify-center">
-                          <Circle className="w-4" />
-                        </button>
+                      <tr
+                          className={cn(
+                            "text-center relative z-20",
+                            i % 2 == 0
+                              ? "bg-zinc-100 bg-opacity-30"
+                              : "bg-zinc-100"
+                          )}
+                      >
+                      <td className="py-1 pl-1">
+                        <div className="rounded-md w-1 h-10 bg-[#ffd027] flex items-center justify-center">
+                          {/* <Circle className="w-4" /> */}
+                        </div>
                       </td>
                       <td className="py-4 font-semibold text-uciblue text-center">
                         {position}/30
@@ -309,7 +327,7 @@ const WaitlistView = ({ waitlist }: WaitlistProps) => {
                       </td>
                       <td className="py-4">{instructor}</td>
                       <td className="py-4 px-4 items-center justify-center">
-                        <button className="flex justify-center items-center">
+                        <button className="flex justify-center items-center" onClick={playToast}>
                           <RiCloseCircleLine className="text-2xl text-red" />
                         </button>
                       </td>
@@ -359,9 +377,9 @@ const ListView = ({ events, waitlist }: Props) => {
       )}
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={1500}
         hideProgressBar={false}
-        newestOnTop={false}
+        newestOnTop={true}
         closeOnClick
         rtl={false}
         pauseOnFocusLoss

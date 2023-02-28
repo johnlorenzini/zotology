@@ -22,6 +22,7 @@ import { CourseSection } from "../siteConfig";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PlanSearch from "./PlanSearch";
+import PlanCalendar from "./PlanCalendar";
 
 export default function Home() {
   const router = useRouter();
@@ -37,6 +38,12 @@ export default function Home() {
 
   const [planCourses, setPlanCourses] = useState<Array<CourseSection>>([]);
 
+  const [currentView, setCurrentView] = useState<boolean>(true);
+
+  const handleToggleView = () => {
+    setCurrentView(!currentView);
+  };
+
   const handleClick = () => {
     if (isEditing) {
       supabase
@@ -51,7 +58,7 @@ export default function Home() {
       setIsEditing(false);
       toast.success("Success", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
         progress: undefined,
@@ -175,14 +182,16 @@ export default function Home() {
             </div>
             {/* Right: edit current plan */}
             <div className="card col-span-12 lg:col-span-6 p-5">
-              <div className="flex gap-3">
+              <div className="flex flex-col md:flex-row gap-3 max-w-full overflow-ellipsis">
+                <div className="flex max-w-full md:max-w-[75%] lg:max-w-[60%]">
+
                 {isEditing ? (
                   <input
                     type="text"
                     value={text}
                     onChange={handleInputChange}
                     onKeyDown={handleEnterKey}
-                    className="pt-2 text-2xl font-semibold text-cardtitle font-title focus:outline-none border-b-2 border-gray-400"
+                    className="md:py-2 text-2xl font-semibold text-cardtitle font-title focus:outline-none border-b-2 border-gray-400"
                     // @ts-ignore
                     onBlur={() => (inputRef.current.style.width = "")}
                     ref={inputRef}
@@ -195,7 +204,7 @@ export default function Home() {
                 ) : (
                   <h3
                     onClick={handleClick}
-                    className="py-2 text-2xl font-semibold text-cardtitle font-title truncate"
+                    className="md:py-2 text-2xl font-semibold text-cardtitle font-title truncate"
                   >
                     {text}
                   </h3>
@@ -205,18 +214,32 @@ export default function Home() {
                 </button>
                 {isEditing && (
                   <button
-                    onClick={() => {
-                      setIsEditing(false);
-                      setText(planData?.data?.at(0)?.name);
-                    }}
-                    className="text-2xl text-rose-500"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setText(planData?.data?.at(0)?.name);
+                  }}
+                  className="text-2xl text-rose-500"
                   >
                     <RiCloseCircleLine />
                   </button>
                 )}
+                </div>
+                <div className="flex justify-center items-center md:justify-end w-full">
+
+                  <button
+                  className="bg-[#f3f3f2] border-2 border-[#e7e7e5] px-4 py-1 rounded-md h-10 w-[10rem] "
+                  onClick={handleToggleView}
+                  >
+                  {currentView ? "Calendar View" : "List View"}
+                  </button>
+                </div>
               </div>
-              <div>
-                <PlanList events={planCourses} setPlanCourses={setPlanCourses} />
+              <div className="h-full">
+                {currentView ? (
+                  <PlanList events={planCourses} setPlanCourses={setPlanCourses} />) : (
+                    <PlanCalendar events={planCourses}/>
+                  )
+                  }
               </div>
             </div>
           </div>
@@ -224,9 +247,9 @@ export default function Home() {
       )}
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={1500}
         hideProgressBar={false}
-        newestOnTop={false}
+        newestOnTop={true}
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
