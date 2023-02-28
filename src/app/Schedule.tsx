@@ -182,13 +182,6 @@ const Schedule = ({ events }: ScheduleProps) => {
         <div className="flex items-stretch overflow-x-scroll grow">
           <ScheduleTimes start={start} hours={hours} />
           <ScheduleDay
-            key={0}
-            day={0}
-            start={start}
-            hours={hours}
-            events={events}
-          />
-          <ScheduleDay
             key={1}
             day={1}
             start={start}
@@ -212,6 +205,13 @@ const Schedule = ({ events }: ScheduleProps) => {
           <ScheduleDay
             key={4}
             day={4}
+            start={start}
+            hours={hours}
+            events={events}
+          />
+          <ScheduleDay
+            key={5}
+            day={5}
             start={start}
             hours={hours}
             events={events}
