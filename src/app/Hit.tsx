@@ -230,7 +230,7 @@ const Hit = ({ hit }: props) => {
                   <th className="px-1 text-center">Req</th>
                   <th className="px-1 text-center">WL</th>
                   <th className="px-1 text-center">Enrolled</th>
-                  <th className="px-1 text-center"></th>
+                  {/* <th className="px-1 text-center"></th> */}
                   <th className="px-1 text-center"></th>
                 </tr>
               </thead>
@@ -316,13 +316,13 @@ const Hit = ({ hit }: props) => {
                           <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                           </td>
-                          <td>
+                          {/* <td>
                             <button
                               className="px-3 py-1 text-sm bg-blue-200 border-2 border-blue-700 font-bold rounded-xl hover:bg-blue-700 transition ease-in-out"
                               >
                                 Plan
                               </button>
-                          </td>
+                          </td> */}
                           <td>
                             {(checkEnrolled(sectionCode) == true) ? (
                               <button

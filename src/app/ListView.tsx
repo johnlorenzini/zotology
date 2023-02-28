@@ -130,6 +130,7 @@ export const EnrolledView = ({ events, title }: EventProps) => {
   }, [events]);
 
   return (
+    <>
     <div className="flex flex-col pb-6">
       <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
         {title && "Enrolled"}
@@ -238,12 +239,22 @@ export const EnrolledView = ({ events, title }: EventProps) => {
         );
       })}
     </div>
+    {
+      allEvents.size == 0 && (
+        <div className="flex flex-col items-center justify-start ">
+          <h3 className="text-2xl font-semibold text-start text-uciblue">You haven&apos;t enrolled in any courses (Yet!).</h3>
+          <p className="text-center text-cardtitle">Find courses by name, number, department, instructor or 5-digit code by searching for them in the search bar above.</p>
+        </div>
+      )
+    }
+    </>
   );
 };
 
 const WaitlistView = ({ waitlist }: WaitlistProps) => {
   return (
     <div>
+      <div className="h-24 w-full text-md md:text-xl text-center px-4 flex items-center justify-center font-semibold rounded-full bg-yellow-200 border-2 border-yellow-600 mt-4 mb-2">Because no Spring 2023 courses have an active waitlist, this data is for demonstration purposes only.</div>
       <h3 className="relative py-2 text-2xl font-semibold text-cardtitle font-title">
         Waitlisted
       </h3>
@@ -333,7 +344,7 @@ const ListView = ({ events, waitlist }: Props) => {
           </h4>
         </div>
         <button
-          className="bg-[#f3f3f2] border-2 border-[#e7e7e5] px-4 py-1 rounded-md h-10 w-[9rem]"
+          className="bg-[#f3f3f2] border-2 border-[#e7e7e5] px-4 py-1 rounded-md h-16 md:h-10 w-[9rem] "
           onClick={handleToggleView}
         >
           {showEnroll ? "Waitlist View" : "Enrolled View"}
