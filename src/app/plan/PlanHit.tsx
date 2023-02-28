@@ -73,7 +73,7 @@ const Hit = ({ hit, setPlanCourses }: props) => {
           if (data) {
             toast.success("Unenrolled!", {
               position: "top-right",
-              autoClose: 3000,
+              autoClose: 1500,
               hideProgressBar: false,
               closeOnClick: true,
               progress: undefined,
@@ -125,7 +125,7 @@ const Hit = ({ hit, setPlanCourses }: props) => {
                 if (result) {
                   toast.success("Added!", {
                     position: "top-right",
-                    autoClose: 3000,
+                    autoClose: 1500,
                     hideProgressBar: false,
                     closeOnClick: true,
                     progress: undefined,
@@ -138,7 +138,7 @@ const Hit = ({ hit, setPlanCourses }: props) => {
           } else {
             toast.error("ERROR: You already have this in your plan!", {
               position: "top-right",
-              autoClose: 3000,
+              autoClose: 1500,
               hideProgressBar: false,
               closeOnClick: true,
               progress: undefined,
@@ -189,7 +189,7 @@ const Hit = ({ hit, setPlanCourses }: props) => {
       <AccordionContent>
         {sections && Object.keys(sections).length > 0 ? (
           <div className="pb-4 overflow-auto">
-            <table className="w-full min-w-[750px]">
+            <table className="w-full">
               <thead>
                 <tr className="text-center border-b-2 border-cardtitle text-cardtitle">
                   <th className="px-1 text-center">Code</th>
@@ -279,7 +279,7 @@ const Hit = ({ hit, setPlanCourses }: props) => {
                           <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                           </td>
-                          <td>
+                          <td className="px-2">
                             <button
                               onClick={() => {
                                 handleSubmit(sectionCode);

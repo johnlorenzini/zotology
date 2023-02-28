@@ -75,7 +75,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
           if (data) {
             toast.success("Enrolled!", {
               position: "top-right",
-              autoClose: 3000,
+              autoClose: 1500,
               hideProgressBar: false,
               closeOnClick: true,
               progress: undefined,
@@ -87,7 +87,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
         } else {
           toast.error("ERROR: You are already enrolled in this class!", {
             position: "top-right",
-            autoClose: 3000,
+            autoClose: 1500,
             hideProgressBar: false,
             closeOnClick: true,
             progress: undefined,
@@ -138,7 +138,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
 
         toast.success("Removed from Plan!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
           progress: undefined,
@@ -199,7 +199,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
         const [courseString, courseData] = mapEntry;
 
         return (
-          <div className="w-full overflow-x-scroll z-0" key={i}>
+          <div className="w-full overflow-x-scroll scrollbar-hide z-0" key={i}>
             <h4 className="text-xl font-semibold">{courseString}</h4>
             <h5 className="text-lg">{courseData.courseTitle}</h5>
             <span className=" text-uciblue">Final: {courseData.finalExam}</span>
