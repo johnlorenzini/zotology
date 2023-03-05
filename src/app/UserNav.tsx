@@ -1,7 +1,5 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { siteConfig } from "./siteConfig";
 import { Button } from "@/lib/components/legacy/ui/button";
 import {
   DropdownMenu,
@@ -42,13 +40,12 @@ const UserNav = () => {
     supabase.auth.getSession().then((session) => {
       if (session.data.session) {
         const id = session.data.session?.user.id;
-        const email = session.data.session?.user.email;
         const ucinetid = session.data.session?.user.email?.split("@")[0];
-        if (id && ucinetid && email) {
+        if (id && ucinetid) {
           supabase
             .from("users")
             .select()
-            .eq("email", email)
+            .eq("id", id)
             .then((results) => {
               if (results.data?.length === 0) {
                 supabase
@@ -60,8 +57,6 @@ const UserNav = () => {
             });
         }
         setUser(session.data?.session?.user);
-      } else {
-        // signInWithGoogle();
       }
     });
   }, []);
