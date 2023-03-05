@@ -1,15 +1,12 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
-import { Schedule } from "../Schedule";
+import { useEffect } from "react";
 
 import { supabase } from "@/lib/supabase/utils/supabase-secret";
 
 import ListView from "../ListView";
 import CalendarView from "../CalendarView";
-import { createClient } from "@/lib/supabase/utils/supabase-server";
 
-import { sampleEvents, sampleWaitlist } from "../siteConfig";
-import { CourseSection } from "../siteConfig";
+import { sampleWaitlist } from "../siteConfig";
 import { useUserContext } from "../SectionsContext";
 
 type Props = {};
@@ -39,7 +36,7 @@ const CourseView = ({}: Props) => {
 
             let sectionsLength = sectionArray?.length ?? 0;
 
-            if (sectionsLength > 0) {
+            if (sectionsLength > 0) {              
               supabase
                 .from("sections")
                 .select()

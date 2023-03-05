@@ -1,7 +1,5 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { siteConfig } from "./siteConfig";
 import { Button } from "@/lib/components/legacy/ui/button";
 import {
   DropdownMenu,
@@ -59,8 +57,6 @@ const UserNav = () => {
             });
         }
         setUser(session.data?.session?.user);
-      } else {
-        // signInWithGoogle();
       }
     });
   }, []);

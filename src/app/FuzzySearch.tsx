@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-import { Hits } from "react-instantsearch-hooks-web";
+import { Hits, useSearchBox } from "react-instantsearch-hooks-web";
 import { Accordion } from "../lib/components/legacy/ui/accordion";
+import { motion } from "framer-motion"
 import Hit from "./Hit";
 
 import { Input } from "../lib/components/legacy/ui/input";
-
-import { useSearchBox } from "react-instantsearch-hooks-web";
 import { supabase } from "@/lib/supabase/utils/supabase-secret";
 
 type props = {};
@@ -48,6 +47,49 @@ const FuzzySearch = (props: props) => {
     getCourses();
   }, []);
 
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key == "Escape") {
+      setShowResults(false);
+    }
+  }
+
+  return (
+    <div className="relative z-20 w-full mt-6 mb-12">
+      <div className="relative w-full flex justify-center">
+        <Input
+          type="search"
+          value={query}
+          placeholder="Search for courses, instructors or enter a 5-digit course code:"
+          onChange={(e) => refine(e.target.value)}
+          className="max-w-5xl text-black z-10 h-12 w-full rounded-full border-[1.5px] border-zinc-400 bg-zinc-50"
+        />
+      </div>
+      <div className="relative h-0 w-full">
+        {
+          showResults && (
+            <motion.div initial={{ opacity: 0}} animate={{opacity: 0.3}} className="fixed bg-slate-300 w-screen h-screen top-0 left-0"
+            onClick={() => {setShowResults(false)}}/>
+          )
+        }
+        {showResults && (
+          /* @ts-ignore */
+          <Accordion
+            className="scrollbar-hide absolute top-0 w-full max-h-[1450px] overflow-y-scroll"
+            type="multiple"
+            defaultValue=""
+            onKeyDown={handleKeyPress}
+            collapsible
+          >
+            <Hits hitComponent={({ hit }) => <Hit hit={hit} />} />
+          </Accordion>
+        )}
+      </div>
+    </div>
+  );
+};
+export default FuzzySearch;
+
+
   //     // filter out the results that are not courses
   //     let filtered = Object.entries(results).filter(([courseId, courseData]): any => {
   //       if (courseData?.type != 'DEPARTMENT') {
@@ -81,32 +123,3 @@ const FuzzySearch = (props: props) => {
   //     }
   //   }
   // }, [searchTerm])
-
-  return (
-    <div className="relative z-20 w-full mt-6 mb-12">
-      <div className="relative w-full flex justify-center">
-        <Input
-          type="search"
-          value={query}
-          placeholder="Search for courses, instructors or enter a 5-digit course code:"
-          onChange={(e) => refine(e.target.value)}
-          className="max-w-5xl text-black z-10 h-12 w-full rounded-full border-[1.5px] border-zinc-400 bg-zinc-50"
-        />
-      </div>
-      <div className="relative h-0 w-full">
-        {showResults && (
-          /* @ts-ignore */
-          <Accordion
-            className="scrollbar-hide absolute top-0 w-full max-h-[1450px] overflow-y-scroll"
-            type="multiple"
-            defaultValue=""
-            collapsible
-          >
-            <Hits hitComponent={({ hit }) => <Hit hit={hit} />} />
-          </Accordion>
-        )}
-      </div>
-    </div>
-  );
-};
-export default FuzzySearch;
