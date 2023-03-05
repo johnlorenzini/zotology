@@ -42,12 +42,13 @@ const UserNav = () => {
     supabase.auth.getSession().then((session) => {
       if (session.data.session) {
         const id = session.data.session?.user.id;
+        const email = session.data.session?.user.email;
         const ucinetid = session.data.session?.user.email?.split("@")[0];
-        if (id && ucinetid) {
+        if (id && ucinetid && email) {
           supabase
             .from("users")
             .select()
-            .eq("id", id)
+            .eq("email", email)
             .then((results) => {
               if (results.data?.length === 0) {
                 supabase
