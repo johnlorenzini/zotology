@@ -5,7 +5,7 @@ type Props = {};
 
 const Footer = (props: Props) => {
   return (
-    <div className="rounded-[1.5em_1.5em_0_0] relative bg-gradient-to-l from-[#0064a4] to-[#1b3d6d] shadow-[0_0_24px_12px_rgba(203,213,225,1)] w-full p-12 items-center">
+    <div className="rounded-[1.5em_1.5em_0_0] relative bg-gradient-to-l from-[#0064a4] to-[#1b3d6d] shadow-[0_0_24px_12px_rgba(203,213,225,1)] w-full p-12 items-center z-50">
       {/* <div className="shadow-2xl absolute top-0 left-0 w-full h-6 bg-white rounded-bl-[1.5em] rounded-br-[1.5em] rounded-t-none">
       </div> */}
       <div className="w-full flex flex-col items-center justify-center gap-5 lg:gap-10 font-body">

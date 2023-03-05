@@ -173,7 +173,7 @@ const Hit = ({ hit }: props) => {
   } = hit;
 
   return (
-    <AccordionItem className="my-2 AccordionItem" value={objectID}>
+    <AccordionItem className="my-2 AccordionItem bg-white transition ease-in-out duration-100 hover:bg-slate-100" value={objectID}>
       <AccordionTrigger>
         <table>
           <tbody className="border-spacing-2.5">
@@ -311,7 +311,7 @@ const Hit = ({ hit }: props) => {
                               </button>
                             ) : (
                               <button
-                                className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-bold rounded-xl hover:bg-green-700 transition ease-in-out"
+                                className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-bold rounded-xl hover:bg-green-500 transition ease-in-out"
                                 onClick={() => {
                                   handleSubmit(sectionCode);
                                 }}

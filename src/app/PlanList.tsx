@@ -289,7 +289,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
                           </td>
                           <td className="py-4">
                             <button
-                              className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-bold rounded-xl hover:bg-green-700 transition ease-in-out"
+                              className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-bold rounded-xl hover:bg-green-500 transition ease-in-out"
                               onClick={() => {
                                 handleEnroll(sectionCode);
                               }}

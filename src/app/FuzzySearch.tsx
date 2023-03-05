@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Hits, useSearchBox } from "react-instantsearch-hooks-web";
 import { Accordion } from "../lib/components/legacy/ui/accordion";
+import { motion } from "framer-motion"
 import Hit from "./Hit";
 
 import { Input } from "../lib/components/legacy/ui/input";
@@ -66,7 +67,7 @@ const FuzzySearch = (props: props) => {
       <div className="relative h-0 w-full">
         {
           showResults && (
-            <div className="fixed bg-zinc-300 bg-opacity-20 w-screen h-screen top-0 left-0"
+            <motion.div initial={{ opacity: 0}} animate={{opacity: 0.3}} className="fixed bg-slate-300 w-screen h-screen top-0 left-0"
             onClick={() => {setShowResults(false)}}/>
           )
         }
