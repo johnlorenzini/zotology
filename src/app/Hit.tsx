@@ -1,24 +1,19 @@
-import React from "react";
-import { useLocalStorage } from "react-use";
 import {
-  Accordion,
   AccordionItem,
   AccordionTrigger,
-  AccordionContent,
+  AccordionContent
 } from "../lib/components/legacy/ui/accordion";
-import { Slide, Zoom, Flip, Bounce } from "react-toastify";
+import { Slide, toast } from "react-toastify";
 
 import { Highlight } from "react-instantsearch-hooks-web";
 import { supabase } from "@/lib/supabase/utils/supabase-secret";
 
 import cn from "classnames";
-import { useEffect, useState } from "react";
-
-import { ToastContainer, toast } from "react-toastify";
+import { useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { useUserContext } from "./SectionsContext";
 
-import { CourseSection } from "./siteConfig"
+import { CourseSection } from "./siteConfig";
 import { useSearchParams } from "next/navigation";
 
 type props = {
@@ -162,18 +157,6 @@ const Hit = ({ hit }: props) => {
           });
         }
       }
-
-      //   if(data){
-      //     const response = await supabase
-      //       .from("users")
-      //       .update({sections : [...data[0].sections, courseCode]})
-      //       .eq("id", session.user.id)
-
-      //     if(response.error){
-      //       console.log(response.error)
-      //     }
-
-      // }
     }
   }
 
@@ -190,7 +173,7 @@ const Hit = ({ hit }: props) => {
   } = hit;
 
   return (
-    <AccordionItem className="my-2 AccordionItem" value={objectID}>
+    <AccordionItem className="my-2 AccordionItem bg-white transition ease-in-out duration-100 hover:bg-slate-100" value={objectID}>
       <AccordionTrigger>
         <table>
           <tbody className="border-spacing-2.5">
@@ -316,15 +299,8 @@ const Hit = ({ hit }: props) => {
                           <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                           </td>
-                          {/* <td>
-                            <button
-                              className="px-3 py-1 text-sm bg-blue-200 border-2 border-blue-700 font-bold rounded-xl hover:bg-blue-700 transition ease-in-out"
-                              >
-                                Plan
-                              </button>
-                          </td> */}
                           <td>
-                            {(checkEnrolled(sectionCode) == true) ? (
+                            {(checkEnrolled(sectionCode)) ? (
                               <button
                                 className="px-3 py-1 text-sm bg-rose-200 border-2 border-rose-700 font-bold rounded-xl hover:bg-rose-700 transition ease-in-out"
                                 onClick={() => {
@@ -335,7 +311,7 @@ const Hit = ({ hit }: props) => {
                               </button>
                             ) : (
                               <button
-                                className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-bold rounded-xl hover:bg-green-700 transition ease-in-out"
+                                className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-bold rounded-xl hover:bg-green-500 transition ease-in-out"
                                 onClick={() => {
                                   handleSubmit(sectionCode);
                                 }}
