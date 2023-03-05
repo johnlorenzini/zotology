@@ -12,6 +12,10 @@ export type Event = {
   course?: string;
   location: string;
   sectionType: string;
+  sectionCode: string | undefined;
+  isPreview: boolean;
+  bgColor?: string;
+  borderColor?: string;
 };
 
 interface ScheduleEventProps {
@@ -22,6 +26,9 @@ interface ScheduleEventProps {
   title: string;
   location: string;
   sectionType: string;
+  isPreview: boolean;
+  bgColor?: string;
+  borderColor?: string;
 }
 
 interface ScheduleTimesProps {
@@ -94,6 +101,9 @@ const ScheduleDay = ({ day, start, hours, events }: ScheduleDay) => {
             title={event.course}
             location={event.location}
             sectionType={event.sectionType}
+            isPreview={event.isPreview}
+            bgColor={event.bgColor}
+            borderColor={event.borderColor}
           />
         ))}
     </div>
@@ -108,6 +118,9 @@ const ScheduleEvent = ({
   title,
   location,
   sectionType,
+  isPreview,
+  bgColor,
+  borderColor
 }: ScheduleEventProps) => {
   return (
     <div
@@ -117,17 +130,37 @@ const ScheduleEvent = ({
         height: `${(length / (hours + 1)) * 120}%`,
       }}
     >
-      <div
-        className={cn(
-          "px-1 text-white rounded-md pt-[2px] pl-[6px] border-t-[3px] flex flex-col justify-start overflow-x-scroll scrollbar-hide bg-slate-300 bg-opacity-40 border-uciblue",
-        )}
-        // sectionType == "Lec" ? "bg-slate-300 bg-opacity-40 border-uciblue" : "bg-slate-300 bg-opacity-20 border-uciyellow "
-      >
-        <span className="text-gray-700 font-bold uppercase">{title}</span>
-        <span className="text-gray-500 text-xs">
-          {sectionType}: {location}
-        </span>
-      </div>
+      {!isPreview ? (
+        <div
+          className={cn(
+            "px-1 text-white rounded-md pt-[2px] pl-[6px] border-t-[3px] flex flex-col justify-start overflow-x-scroll scrollbar-hide bg-slate-300 bg-opacity-40"
+          )}
+          style={{
+            borderColor: borderColor
+          }}
+          // sectionType == "Lec" ? "bg-slate-300 bg-opacity-40 border-uciblue" : "bg-slate-300 bg-opacity-20 border-uciyellow "
+        >
+          <span className="text-gray-700 font-bold uppercase">{title}</span>
+          <span className="text-gray-500 text-xs">
+            {sectionType}: {location}
+          </span>
+        </div>
+      ) : (
+        <div
+          className={cn(
+            "px-1 text-white rounded-md pt-[2px] pl-[6px] border-t-[3px] flex flex-col justify-start overflow-x-scroll scrollbar-hide"
+          )}
+          style={{
+            backgroundColor: bgColor,
+            borderColor: borderColor
+          }}
+        >
+          <span className="text-gray-500 font-bold uppercase">{title}</span>
+          <span className="text-gray-300 text-xs">
+            {sectionType}: {location}
+          </span>
+        </div>
+      )}
     </div>
   );
 };

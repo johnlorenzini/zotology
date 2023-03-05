@@ -24,11 +24,14 @@ import "react-toastify/dist/ReactToastify.css";
 import PlanSearch from "./PlanSearch";
 import PlanCalendar from "./PlanCalendar";
 
+import { HoverSection } from "./PlanCalendar"
+
 export default function Home() {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const inputRef = useRef(null);
+  const [sectionHover, setSectionHover] = useState<HoverSection|null>(null);
 
   const searchParams = useSearchParams();
   const data = searchParams.get("id");
@@ -178,7 +181,7 @@ export default function Home() {
           <div className="flex-grow grid grid-flow-row-dense gap-6 font-body grid-cols-12 w-full px-10">
             {/* Left: search to add classes */}
             <div className="card col-span-12 lg:col-span-6 p-5">
-              <PlanSearchWrapper setPlanCourses={setPlanCourses}/>
+              <PlanSearchWrapper setPlanCourses={setPlanCourses} setSectionHover={setSectionHover} sectionHover={sectionHover}/>
             </div>
             {/* Right: edit current plan */}
             <div className="card col-span-12 lg:col-span-6 p-5">
@@ -237,7 +240,7 @@ export default function Home() {
               <div className="h-full">
                 {currentView ? (
                   <PlanList events={planCourses} setPlanCourses={setPlanCourses} />) : (
-                    <PlanCalendar events={planCourses}/>
+                    <PlanCalendar events={planCourses} sectionHover={sectionHover}/>
                   )
                   }
               </div>

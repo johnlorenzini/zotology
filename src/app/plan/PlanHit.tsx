@@ -20,12 +20,16 @@ import "react-toastify/dist/ReactToastify.css";
 import { CourseSection } from "../siteConfig";
 import { useSearchParams } from "next/navigation";
 
+import { HoverSection } from "./PlanCalendar";
+
 type props = {
   hit: any;
   setPlanCourses: React.Dispatch<SetStateAction<CourseSection[]>>;
+  setSectionHover: React.Dispatch<SetStateAction<HoverSection|null>>;
+  sectionHover: HoverSection|null;
 };
 
-const Hit = ({ hit, setPlanCourses }: props) => {
+const Hit = ({ hit, setPlanCourses, setSectionHover, sectionHover }: props) => {
   const [session, setSession] = useState(null);
 
   // async function getClasses(){
@@ -133,8 +137,7 @@ const Hit = ({ hit, setPlanCourses }: props) => {
                     transition: Slide,
                   });
                 }
-              })
-
+              });
           } else {
             toast.error("ERROR: You already have this in your plan!", {
               position: "top-right",
@@ -163,8 +166,11 @@ const Hit = ({ hit, setPlanCourses }: props) => {
   } = hit;
 
   return (
-    <AccordionItem className="my-2 AccordionItem" value={objectID}>
-      <AccordionTrigger>
+    <AccordionItem
+      className="my-2 AccordionItem bg-white transition ease-in-out duration-200"
+      value={objectID}
+    >
+      <AccordionTrigger className="hover:bg-slate-100 rounded-lg">
         <table>
           <tbody className="border-spacing-2.5">
             <tr>
@@ -188,9 +194,9 @@ const Hit = ({ hit, setPlanCourses }: props) => {
       </AccordionTrigger>
       <AccordionContent>
         {sections && Object.keys(sections).length > 0 ? (
-          <div className="pb-4 overflow-auto">
+          <div className="pb-4 overflow-auto gray-scrollbar-horizontal">
             <table className="w-full">
-              <thead>
+              <thead className="sticky right-0">
                 <tr className="text-center border-b-2 border-cardtitle text-cardtitle">
                   <th className="px-1 text-center">Code</th>
                   <th className="px-1 text-center">Type</th>
@@ -199,7 +205,7 @@ const Hit = ({ hit, setPlanCourses }: props) => {
                   <th className="px-1 text-center">Instructor</th>
                   <th className="px-1 text-center">Rstr</th>
                   <th className="px-1 text-center">Enrolled</th>
-                  <th className="px-1 text-center"></th>
+                  <th className="px-1 text-center sticky right-0 bg-gradient-to-r from-transparent to-[rgba(255,255,255,1)]"></th>
                   <th className="px-1 text-center"></th>
                 </tr>
               </thead>
@@ -245,12 +251,12 @@ const Hit = ({ hit, setPlanCourses }: props) => {
                               isHeader ? "rounded-l-md" : ""
                             )}
                           >
-                            <Highlight
+                            {/* <Highlight
                               attribute={`sections.${i}.sectionCode`}
                               hit={hit}
-                            >
-                              {sectionCode}
-                            </Highlight>
+                            > */}
+                            {sectionCode}
+                            {/* </Highlight> */}
                           </td>
                           <td>
                             <Highlight
@@ -279,12 +285,50 @@ const Hit = ({ hit, setPlanCourses }: props) => {
                           <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                           </td>
-                          <td className="px-2">
+                          <td
+                            className={cn(
+                              "px-2 sticky right-0",
+                              isHeader
+                                ? "bg-[#E9E9E6]"
+                                : "bg-gradient-to-r from-transparent to-[rgba(255,255,255,0.8)]"
+                            )}
+                            onMouseEnter={() => {
+                              if (!sectionHover?.visible) {
+                                setSectionHover(
+                                  (sectionHover) => {
+                                    return {
+                                      course: `${deptCode} ${courseNumber}`,
+                                      sectionType: sectionType,
+                                      location: meetings[0]?.bldg,
+                                      time: `${meetings[0]?.days} ${meetings[0]?.time}`,
+                                      sectionCode: sectionCode,
+                                      visible: true
+                                    }
+                                });
+                              }
+                            }}
+                            onMouseLeave={() => {
+                              if (sectionHover != null) {
+                                setSectionHover(
+                                  (sectionHover: any) => {
+                                    return {
+                                      course: sectionHover?.course,
+                                      sectionType: sectionHover?.sectionType,
+                                      location: sectionHover?.location,
+                                      time: sectionHover?.time,
+                                      sectionCode: sectionHover?.sectionCode,
+                                      visible: false
+                                    }
+                                  }
+                                );  
+                              }
+                            }}
+                          >
                             <button
                               onClick={() => {
                                 handleSubmit(sectionCode);
                               }}
-                              className="px-3 py-1 text-sm bg-blue-200 border-2 border-blue-700 font-bold rounded-xl hover:bg-blue-700 transition ease-in-out"
+                              className="px-3 py-1 text-sm bg-blue-200 border-2 border-blue-700 font-semibold rounded-xl hover:bg-blue-700 transition ease-in-out"
                             >
                               Plan
                             </button>

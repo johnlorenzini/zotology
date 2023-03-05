@@ -17,11 +17,15 @@ import { Input } from "../../lib/components/legacy/ui/input";
 import { supabase } from "@/lib/supabase/utils/supabase-secret";
 import { CourseSection } from "../siteConfig";
 
+import { HoverSection } from "./PlanCalendar"
+
 type Props = {
   setPlanCourses: React.Dispatch<SetStateAction<CourseSection[]>>;
+  setSectionHover: React.Dispatch<SetStateAction<HoverSection|null>>;
+  sectionHover: HoverSection|null;
 };
 
-const PlanSearch = ({ setPlanCourses }: Props) => {
+const PlanSearch = ({ setPlanCourses, setSectionHover, sectionHover }: Props) => {
   const { query, refine } = useSearchBox({});
   const [classes, setClasses] = useState([]);
 
@@ -78,7 +82,7 @@ const PlanSearch = ({ setPlanCourses }: Props) => {
           >
             <Hits
               hitComponent={({ hit }) => (
-                <PlanHit hit={hit} setPlanCourses={setPlanCourses} />
+                <PlanHit hit={hit} setPlanCourses={setPlanCourses} setSectionHover={setSectionHover} sectionHover={sectionHover}/>
               )}
             />
           </Accordion>

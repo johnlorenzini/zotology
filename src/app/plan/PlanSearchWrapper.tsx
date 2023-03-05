@@ -8,18 +8,22 @@ import algoliasearch from "algoliasearch/lite";
 import React, {SetStateAction} from "react";
 import FuzzySearch from "../FuzzySearch";
 import PlanSearch from "./PlanSearch";
+import { HoverSection } from "./PlanCalendar"
+
 type Props = {
     setPlanCourses: React.Dispatch<SetStateAction<CourseSection[]>>
+    setSectionHover: React.Dispatch<SetStateAction<HoverSection|null>>;
+    sectionHover: HoverSection|null;
 };
 
-const PlanSearchWrapper = ({ setPlanCourses }: Props) => {
+const PlanSearchWrapper = ({ setPlanCourses, setSectionHover, sectionHover }: Props) => {
   const searchClient = algoliasearch(
     "YLIHB3D2PU",
     "f5c5771bd7c29cf59e97f41edb2515a8"
   );
   return (
     <InstantSearch searchClient={searchClient} indexName="sections">
-      <PlanSearch setPlanCourses={setPlanCourses}/>
+      <PlanSearch setPlanCourses={setPlanCourses} setSectionHover={setSectionHover} sectionHover={sectionHover}/>
     </InstantSearch>
   );
 };
