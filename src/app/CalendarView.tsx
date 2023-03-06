@@ -5,6 +5,8 @@ import { Schedule, Event } from "./Schedule";
 import { parseTime } from "@/lib/section/utils/parseTime";
 import { CourseSection } from "./siteConfig";
 
+import { hashStringToColor } from "@/lib/section/utils/stringColorHash"
+
 type Props = {
   events: Array<CourseSection>;
 };
@@ -31,7 +33,7 @@ const CalendarView = ({ events }: Props) => {
   useEffect(() => {
 
     events.forEach((evt) => {
-      const { meetings, courseTitle, courseFull, sectionType } = evt;
+      const { meetings, courseTitle, courseFull, sectionType, sectionCode } = evt;
 
       const location = meetings[0]?.bldg;
       const timeString = `${meetings[0]?.days} ${meetings[0]?.time}`;
@@ -55,6 +57,10 @@ const CalendarView = ({ events }: Props) => {
           course: courseFull,
           location: location,
           sectionType: sectionType,
+          sectionCode: sectionCode,
+          // @ts-ignore
+          borderColor: hashStringToColor(courseFull),
+          isPreview: false,
         };
         parsedEvents.push(parsedEvent);
       });
