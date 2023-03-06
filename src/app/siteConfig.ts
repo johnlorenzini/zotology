@@ -60,6 +60,7 @@ export interface CourseSection {
     totalEnrolled?: string;
     sectionEnrolled?: string;
   }
+  primaryColor?: string;
   [otherOptions: string]: unknown;
 }
 

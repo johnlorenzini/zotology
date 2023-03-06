@@ -249,6 +249,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
                           )}
                         >
                           <td className="py-1 pl-1">
+                            {/* bg-[#ffd027] */}
                             <div className="rounded-md w-1 h-10 bg-[#ffd027] flex items-center justify-center">
                               {/* <Circle className="w-4" /> */}
                             </div>
@@ -289,12 +290,12 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
                           </td>
                           <td className="py-4">
                             <button
-                              className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-bold rounded-xl hover:bg-green-500 transition ease-in-out"
+                              className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-semibold rounded-xl hover:bg-green-500 transition ease-in-out"
                               onClick={() => {
                                 handleEnroll(sectionCode);
                               }}
                             >
-                              ENROLL
+                              Enroll
                             </button>
                           </td>
                         </tr>

@@ -173,7 +173,7 @@ const Hit = ({ hit }: props) => {
   } = hit;
 
   return (
-    <AccordionItem className="my-2 AccordionItem bg-white transition ease-in-out duration-100 hover:bg-slate-100" value={objectID}>
+    <AccordionItem className="my-2 AccordionItem bg-white transition ease-in-out duration-200 hover:bg-slate-100" value={objectID}>
       <AccordionTrigger>
         <table>
           <tbody className="border-spacing-2.5">
