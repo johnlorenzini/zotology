@@ -259,12 +259,7 @@ const Hit = ({ hit }: props) => {
                               isHeader ? "rounded-l-md" : ""
                             )}
                           >
-                            <Highlight
-                              attribute={`sections.${i}.sectionCode`}
-                              hit={hit}
-                            >
                               {sectionCode}
-                            </Highlight>
                           </td>
                           <td>
                             <Highlight
