@@ -8,6 +8,7 @@ import { Slide } from "react-toastify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSearchParams } from "next/navigation";
+import { hashStringToColor } from "@/lib/section/utils/stringColorHash";
 
 type EventProps = {
   events: Array<CourseSection>;
@@ -56,8 +57,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
             .from("sections")
             .select()
             .eq("sectionCode", sectionCode) // ["XXXXX", "XXXXX", "XXXXX"]
-            .then((result) => {
-            });
+            .then((result) => {});
 
           // Update new course code on database
           sections.push(sectionCode);
@@ -67,7 +67,6 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
             .update({ id: id, ucinetid: ucinetid, sections: sections })
             .eq("id", id)
             .select();
-
 
           if (error) {
             console.log(error);
@@ -96,8 +95,8 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
           });
         }
       }
+    }
   }
-}
 
   const searchParams = useSearchParams();
 
@@ -121,9 +120,9 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
         const newPlanCourses = events.filter(
           (section: CourseSection) => section.sectionCode !== sectionCode
         );
-          
+
         setPlanCourses(newPlanCourses);
-          
+
         // update plan on database
         const newSections = courses.filter(
           (section: string) => section !== sectionCode
@@ -133,8 +132,7 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
           .from("plans")
           .update({ id: planId, courses: newSections })
           .eq("id", planId)
-          .then((result) => {
-          })
+          .then((result) => {});
 
         toast.success("Removed from Plan!", {
           position: "top-right",
@@ -151,7 +149,6 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
   const [ShowDropdown, setShowDropdown] = useState("");
 
   useEffect(() => {
-
     var mappedEvents: Map<string, CourseData> = new Map();
 
     events.forEach((evt) => {
@@ -191,132 +188,149 @@ const PlanList = ({ events, title, setPlanCourses }: EventProps) => {
 
   return (
     <>
-    <div className="flex flex-col pb-6">
-      <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
-        {title && "Enrolled"}
-      </h3>
-      {Array.from(allEvents)?.map((mapEntry, i) => {
-        const [courseString, courseData] = mapEntry;
+      <div className="flex flex-col pb-6">
+        <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
+          {title && "Enrolled"}
+        </h3>
+        {Array.from(allEvents)?.map((mapEntry, i) => {
+          const [courseString, courseData] = mapEntry;
 
-        return (
-          <div className="w-full overflow-x-scroll scrollbar-hide z-0" key={i}>
-            <h4 className="text-xl font-semibold">{courseString}</h4>
-            <h5 className="text-lg">{courseData.courseTitle}</h5>
-            <span className=" text-uciblue">Final: {courseData.finalExam}</span>
-            <table className="w-full text-left mt-2 overflow-x-scroll">
-              <thead className="text-center">
-                <tr className="py-2 bg-uciblue text-white text-medium">
-                  <th className="py-1 rounded-l-sm overflow-hidden"></th>
-                  <th className="py-1">Code</th>
-                  <th className="py-1">Type</th>
-                  <th className="py-1">Location</th>
-                  <th className="py-1">Time</th>
-                  <th className="py-1">Instructor</th>
-                  <th className="py-1">Capacity</th>
-                  <th className="py-1 rounded-r-sm overflow-hidden"></th>
-                  <th className="py-1 rounded-r-sm overflow-hidden"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {courseData.sections?.map(
-                  (
-                    {
-                      sectionType,
-                      meetings,
-                      instructors,
-                      sectionCode,
-                      units,
-                      numCurrentlyEnrolled,
-                      maxCapacity,
-                    }: CourseSection,
-                    i
-                  ) => {
-                    const {
-                      days: meetDays,
-                      time: meetTime,
-                      bldg,
-                    } = meetings[0];
-                    const instructor = instructors[0];
+          return (
+            <div
+              className="w-full overflow-x-scroll scrollbar-hide z-0"
+              key={i}
+            >
+              <h4 className="text-xl font-semibold">{courseString}</h4>
+              <h5 className="text-lg">{courseData.courseTitle}</h5>
+              <span className=" text-uciblue">
+                Final: {courseData.finalExam}
+              </span>
+              <table className="w-full text-left mt-2 overflow-x-scroll">
+                <thead className="text-center">
+                  <tr className="py-2 bg-uciblue text-white text-medium">
+                    <th className="py-1 rounded-l-sm overflow-hidden"></th>
+                    <th className="py-1">Code</th>
+                    <th className="py-1">Type</th>
+                    <th className="py-1">Location</th>
+                    <th className="py-1">Time</th>
+                    <th className="py-1">Instructor</th>
+                    <th className="py-1">Capacity</th>
+                    <th className="py-1 rounded-r-sm overflow-hidden"></th>
+                    <th className="py-1 rounded-r-sm overflow-hidden"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {courseData.sections?.map(
+                    (
+                      {
+                        sectionType,
+                        meetings,
+                        instructors,
+                        sectionCode,
+                        units,
+                        numCurrentlyEnrolled,
+                        maxCapacity,
+                        courseFull,
+                      }: CourseSection,
+                      i
+                    ) => {
+                      const {
+                        days: meetDays,
+                        time: meetTime,
+                        bldg,
+                      } = meetings[0];
+                      const instructor = instructors[0];
 
-                    return (
-                      <>
-                        <tr
-                          className={cn(
-                            "text-center relative z-20",
-                            i % 2 == 0
-                              ? "bg-zinc-100 bg-opacity-30"
-                              : "bg-zinc-100"
-                          )}
-                        >
-                          <td className="py-1 pl-1">
-                            {/* bg-[#ffd027] */}
-                            <div className="rounded-md w-1 h-10 bg-[#ffd027] flex items-center justify-center">
-                              {/* <Circle className="w-4" /> */}
-                            </div>
-                          </td>
-                          {/* Code */}
-                          <td className="py-4">{sectionCode}</td>
+                      return (
+                        <>
+                          <tr
+                            className={cn(
+                              "text-center relative z-20",
+                              i % 2 == 0
+                                ? "bg-zinc-100 bg-opacity-30"
+                                : "bg-zinc-100"
+                            )}
+                          >
+                            <td className="py-1 pl-1">
+                              {/* bg-[#ffd027] */}
+                              <div
+                                className="rounded-md w-1 h-10 flex items-center justify-center"
+                                style={{
+                                  backgroundColor: hashStringToColor(
+                                    courseFull ?? ""
+                                  ),
+                                }}
+                              >
+                                {/* <Circle className="w-4" /> */}
+                              </div>
+                            </td>
+                            {/* Code */}
+                            <td className="py-4">{sectionCode}</td>
 
-                          {/* Type */}
-                          <td className="py-4 uppercase">{sectionType}</td>
+                            {/* Type */}
+                            <td className="py-4 uppercase">{sectionType}</td>
 
-                          {/* Location */}
-                          <td className="py-4">{bldg}</td>
+                            {/* Location */}
+                            <td className="py-4">{bldg}</td>
 
-                          {/* Time */}
-                          <td className="py-4 ">
-                            <span>{meetDays}</span>
-                            {meetDays && <br />}
-                            <span>{meetTime}</span>
-                          </td>
+                            {/* Time */}
+                            <td className="py-4 ">
+                              <span>{meetDays}</span>
+                              {meetDays && <br />}
+                              <span>{meetTime}</span>
+                            </td>
 
-                          {/* Instructor */}
-                          <td className="py-4">{instructor}</td>
+                            {/* Instructor */}
+                            <td className="py-4">{instructor}</td>
 
-                          <td className="py-4">
-                            {numCurrentlyEnrolled?.totalEnrolled}/{maxCapacity}
-                          </td>
+                            <td className="py-4">
+                              {numCurrentlyEnrolled?.totalEnrolled}/
+                              {maxCapacity}
+                            </td>
 
-                          {/*  */}
-                          <td className="p-4 items-center justify-center">
-                            <button
-                              className="flex justify-center items-center"
-                              onClick={() => {
-                                handleDelete(sectionCode);
-                              }}
-                            >
-                              <RiCloseCircleLine className="text-2xl text-red" />
-                            </button>
-                          </td>
-                          <td className="py-4">
-                            <button
-                              className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-semibold rounded-xl hover:bg-green-500 transition ease-in-out"
-                              onClick={() => {
-                                handleEnroll(sectionCode);
-                              }}
-                            >
-                              Enroll
-                            </button>
-                          </td>
-                        </tr>
-                      </>
-                    );
-                  }
-                )}
-              </tbody>
-            </table>
-          </div>
-        );
-      })}
-    </div>
-    {
-      allEvents.size == 0 && (
+                            {/*  */}
+                            <td className="p-4 items-center justify-center">
+                              <button
+                                className="flex justify-center items-center"
+                                onClick={() => {
+                                  handleDelete(sectionCode);
+                                }}
+                              >
+                                <RiCloseCircleLine className="text-2xl text-red" />
+                              </button>
+                            </td>
+                            <td className="py-4">
+                              <button
+                                className="px-3 py-1 text-sm bg-green-200 border-2 border-green-700 font-semibold rounded-xl hover:bg-green-500 transition ease-in-out"
+                                onClick={() => {
+                                  handleEnroll(sectionCode);
+                                }}
+                              >
+                                Enroll
+                              </button>
+                            </td>
+                          </tr>
+                        </>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
+      </div>
+      {allEvents.size == 0 && (
         <div className="flex flex-col items-center justify-start ">
-          <h3 className="text-2xl font-semibold text-center text-uciblue">You haven&apos;t planned any courses (Yet!).</h3>
-          <p className="text-center text-cardtitle">Find courses by name, number, department, instructor or 5-digit code by searching for them in the search bar.</p>
+          <h3 className="text-2xl font-semibold text-center text-uciblue">
+            You haven&apos;t planned any courses yet.
+          </h3>
+          <p className="text-center text-cardtitle">
+            Find courses by name, number, department, instructor or 5-digit code
+            by searching for them in the search bar.
+          </p>
         </div>
-      )
-    }
+      )}
     </>
   );
 };

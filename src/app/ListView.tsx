@@ -10,6 +10,7 @@ import { Slide, Zoom, Flip, Bounce } from "react-toastify";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUserContext } from "./SectionsContext";
+import { hashStringToColor } from "@/lib/section/utils/stringColorHash";
 
 /* eslint-disable react/jsx-key */
 type Props = {
@@ -131,128 +132,141 @@ export const EnrolledView = ({ events, title }: EventProps) => {
 
   return (
     <>
-    <div className="flex flex-col pb-6">
-      <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
-        {title && "Enrolled"}
-      </h3>
-      {Array.from(allEvents)?.map((mapEntry, i) => {
-        const [courseString, courseData] = mapEntry;
-        // console.log(courseString, courseData);
+      <div className="flex flex-col pb-6">
+        <h3 className="py-2 text-2xl font-semibold text-cardtitle font-title">
+          {title && "Enrolled"}
+        </h3>
+        {Array.from(allEvents)?.map((mapEntry, i) => {
+          const [courseString, courseData] = mapEntry;
+          // console.log(courseString, courseData);
 
-        return (
-          <div className="w-full" key={i}>
-            <h4 className="text-xl font-semibold">{courseString}</h4>
-            <h5 className="text-lg">{courseData.courseTitle}</h5>
-            <span className=" text-uciblue">Final: {courseData.finalExam}</span>
-            <table className="w-full text-left mt-2 overflow-x-scroll">
-              <thead className="text-center">
-                <tr className="py-2 bg-uciblue text-white text-medium">
-                  <th className="py-1 rounded-l-sm overflow-hidden"></th>
-                  <th className="py-1">Code</th>
-                  <th className="py-1">Type</th>
-                  <th className="py-1">Location</th>
-                  <th className="py-1">Time</th>
-                  <th className="py-1">Instructor</th>
-                  <th className="py-1">Units</th>
-                  <th className="py-1">Grade</th>
-                  <th className="py-1 rounded-r-sm overflow-hidden"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {courseData.sections?.map(
-                  (
-                    {
-                      sectionType,
-                      meetings,
-                      instructors,
-                      sectionCode,
-                      units,
-                    }: CourseSection,
-                    i
-                  ) => {
-                    const {
-                      days: meetDays,
-                      time: meetTime,
-                      bldg,
-                    } = meetings[0];
-                    const instructor = instructors[0];
+          return (
+            <div className="w-full" key={i}>
+              <h4 className="text-xl font-semibold">{courseString}</h4>
+              <h5 className="text-lg">{courseData.courseTitle}</h5>
+              <span className=" text-uciblue">
+                Final: {courseData.finalExam}
+              </span>
+              <table className="w-full text-left mt-2 overflow-x-scroll">
+                <thead className="text-center">
+                  <tr className="py-2 bg-uciblue text-white text-medium">
+                    <th className="py-1 rounded-l-sm overflow-hidden"></th>
+                    <th className="py-1">Code</th>
+                    <th className="py-1">Type</th>
+                    <th className="py-1">Location</th>
+                    <th className="py-1">Time</th>
+                    <th className="py-1">Instructor</th>
+                    <th className="py-1">Units</th>
+                    <th className="py-1">Grade</th>
+                    <th className="py-1 rounded-r-sm overflow-hidden"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {courseData.sections?.map(
+                    (
+                      {
+                        sectionType,
+                        meetings,
+                        instructors,
+                        sectionCode,
+                        units,
+                        courseFull,
+                      }: CourseSection,
+                      i
+                    ) => {
+                      const {
+                        days: meetDays,
+                        time: meetTime,
+                        bldg,
+                      } = meetings[0];
+                      const instructor = instructors[0];
 
-                    return (
-                      <>
-                        <tr
-                          className={cn(
-                            "text-center relative z-20",
-                            i % 2 == 0
-                              ? "bg-zinc-100 bg-opacity-30"
-                              : "bg-zinc-100"
-                          )}
-                        >
-                          <td className="py-1 pl-1">
-                            <div className="rounded-md w-1 h-10 bg-[#ffd027] flex items-center justify-center">
-                              {/* <Circle className="w-4" /> */}
-                            </div>
-                          </td>
-                          {/* Code */}
-                          <td className="py-4">{sectionCode}</td>
+                      return (
+                        <>
+                          <tr
+                            className={cn(
+                              "text-center relative z-20",
+                              i % 2 == 0
+                                ? "bg-zinc-100 bg-opacity-30"
+                                : "bg-zinc-100"
+                            )}
+                          >
+                            <td className="py-1 pl-1">
+                              <div
+                                className="rounded-md w-1 h-10 flex items-center justify-center"
+                                style={{
+                                  backgroundColor: hashStringToColor(
+                                    courseFull ?? ""
+                                  ),
+                                }}
+                              >
+                                {/* <Circle className="w-4" /> */}
+                              </div>
+                            </td>
+                            {/* Code */}
+                            <td className="py-4">{sectionCode}</td>
 
-                          {/* Type */}
-                          <td className="py-4 uppercase">{sectionType}</td>
+                            {/* Type */}
+                            <td className="py-4 uppercase">{sectionType}</td>
 
-                          {/* Location */}
-                          <td className="py-4">{bldg}</td>
+                            {/* Location */}
+                            <td className="py-4">{bldg}</td>
 
-                          {/* Time */}
-                          <td className="py-4 ">
-                            <span>{meetDays}</span> 
-                            {meetDays && <br />}
-                            <span>{meetTime}</span>
-                          </td>
+                            {/* Time */}
+                            <td className="py-4 ">
+                              <span>{meetDays}</span>
+                              {meetDays && <br />}
+                              <span>{meetTime}</span>
+                            </td>
 
-                          {/* Instructor */}
-                          <td className="py-4">{instructor}</td>
+                            {/* Instructor */}
+                            <td className="py-4">{instructor}</td>
 
-                          {/* Units */}
-                          <td className="py-4">{units}</td>
+                            {/* Units */}
+                            <td className="py-4">{units}</td>
 
-                          {/* Gr Type */}
-                          <td className="py-4">Letter</td>
+                            {/* Gr Type */}
+                            <td className="py-4">Letter</td>
 
-                          {/*  */}
-                          <td className="p-4 items-center justify-center">
-                            <button
-                              className="flex justify-center items-center"
-                              onClick={() => {
-                                handleDelete(sectionCode);
-                              }}
-                            >
-                              <RiCloseCircleLine className="text-2xl text-red" />
-                            </button>
-                          </td>
-                        </tr>
-                      </>
-                    );
-                  }
-                )}
-              </tbody>
-            </table>
-          </div>
-        );
-      })}
-    </div>
-    {
-      allEvents.size == 0 && (
+                            {/*  */}
+                            <td className="p-4 items-center justify-center">
+                              <button
+                                className="flex justify-center items-center"
+                                onClick={() => {
+                                  handleDelete(sectionCode);
+                                }}
+                              >
+                                <RiCloseCircleLine className="text-2xl text-red" />
+                              </button>
+                            </td>
+                          </tr>
+                        </>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
+      </div>
+      {allEvents.size == 0 && (
         <div className="flex flex-col items-center justify-start ">
-          <h3 className="text-2xl font-semibold text-center text-uciblue">You haven&apos;t enrolled in any courses (Yet!).</h3>
-          <p className="text-center text-cardtitle">Find courses by name, number, department, instructor or 5-digit code by searching for them in the search bar above.</p>
+          <h3 className="text-2xl font-semibold text-center text-uciblue">
+            You haven&apos;t enrolled in any courses yet.
+          </h3>
+          <p className="text-center text-cardtitle">
+            Find courses by name, number, department, instructor or 5-digit code
+            by searching for them in the search bar above.
+          </p>
         </div>
-      )
-    }
+      )}
     </>
   );
 };
 
 const WaitlistView = ({ waitlist }: WaitlistProps) => {
-  function playToast(){
+  function playToast() {
     toast.error("This data cannot be deleted!", {
       position: "top-right",
       autoClose: 1500,
@@ -265,7 +279,10 @@ const WaitlistView = ({ waitlist }: WaitlistProps) => {
   }
   return (
     <div>
-      <div className="h-24 w-full text-md md:text-xl text-center px-4 flex items-center justify-center font-semibold rounded-full bg-yellow-200 border-2 border-yellow-600 mt-4 mb-2">Because no Spring 2023 courses have an active waitlist, this data is for demonstration purposes only.</div>
+      <div className="h-24 w-full text-md md:text-xl text-center px-4 flex items-center justify-center font-medium rounded-xl bg-yellow-200 border-2 border-yellow-600 mt-4 mb-2">
+        Because no Spring 2023 courses have an active waitlist, this data is for
+        demonstration purposes only.
+      </div>
       <h3 className="relative py-2 text-2xl font-semibold text-cardtitle font-title">
         Waitlisted
       </h3>
@@ -294,7 +311,7 @@ const WaitlistView = ({ waitlist }: WaitlistProps) => {
                 <table className="w-full text-left mt-2">
                   <thead className="bg-[#e4e4e0] rounded-lg  text-semibold">
                     <tr className="text-center">
-                    <th className="py-1 rounded-l-sm overflow-hidden"></th>
+                      <th className="py-1 rounded-l-sm overflow-hidden"></th>
                       <th className="py-1">Position</th>
                       <th className="py-1">Type</th>
                       <th className="py-1">Location</th>
@@ -304,14 +321,12 @@ const WaitlistView = ({ waitlist }: WaitlistProps) => {
                     </tr>
                   </thead>
                   <tbody>
-                      <tr
-                          className={cn(
-                            "text-center relative z-20",
-                            i % 2 == 0
-                              ? "bg-zinc-100 bg-opacity-30"
-                              : "bg-zinc-100"
-                          )}
-                      >
+                    <tr
+                      className={cn(
+                        "text-center relative z-20",
+                        i % 2 == 0 ? "bg-zinc-100 bg-opacity-30" : "bg-zinc-100"
+                      )}
+                    >
                       <td className="py-1 pl-1">
                         <div className="rounded-md w-1 h-10 bg-[#ffd027] flex items-center justify-center">
                           {/* <Circle className="w-4" /> */}
@@ -327,7 +342,10 @@ const WaitlistView = ({ waitlist }: WaitlistProps) => {
                       </td>
                       <td className="py-4">{instructor}</td>
                       <td className="py-4 px-4 items-center justify-center">
-                        <button className="flex justify-center items-center" onClick={playToast}>
+                        <button
+                          className="flex justify-center items-center"
+                          onClick={playToast}
+                        >
                           <RiCloseCircleLine className="text-2xl text-red" />
                         </button>
                       </td>
