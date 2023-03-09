@@ -79,7 +79,11 @@ const SavedPlans = (props: Props) => {
                   return false;
                 });
 
-                setPlans([autoEnrolledPlan, ...sortedPlans]);
+                if (autoEnrolledPlan != null) {
+                  setPlans([autoEnrolledPlan, ...sortedPlans]);
+                } else {
+                  setPlans(planArray);
+                }
               }
             });
         }
@@ -124,13 +128,11 @@ const SavedPlans = (props: Props) => {
       )}
       {!plans && (
         <div className="flex flex-col h-full">
-          <h2 className="text-lg font-medium mt-4">
-            You currently have no plans
-          </h2>
-          <div className="flex items-center text-sm">
-            <h3 className="text-sm text-[#706f6c] pl-2">
-              Click to add a new plan
-            </h3>
+          <div className="flex flex-col items-center text-sm">
+            <h2 className="text-lg font-medium mt-4 text-uciblue">
+              You currently have no plans.
+            </h2>
+            <h3 className="text-sm text-[#706f6c]">Click to add a new plan</h3>
           </div>
           <div className="py-8 flex justify-center">
             {/* run createPlan and redirect to /plan, sending planId */}
