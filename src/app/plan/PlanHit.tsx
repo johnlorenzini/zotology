@@ -22,6 +22,8 @@ import { useSearchParams } from "next/navigation";
 
 import { HoverSection } from "./PlanCalendar";
 
+import { parseRestriction } from "@/lib/section/utils/parseRestriction";
+
 type props = {
   hit: any;
   setPlanCourses: React.Dispatch<SetStateAction<CourseSection[]>>;
@@ -45,6 +47,8 @@ const Hit = ({ hit, setPlanCourses, setSectionHover, sectionHover }: props) => {
   //     }
   //   }
   // }
+
+  const [showRestrHover, setShowRestrHover] = useState<string | null>(null);
 
   async function handleUnenroll(courseCode: string) {
     const {
@@ -279,12 +283,30 @@ const Hit = ({ hit, setPlanCourses, setSectionHover, sectionHover }: props) => {
                               {instructors[0]}
                             </Highlight>
                           </td>
-                          <td
-                            className="px-1 text-center"
-                            onMouseEnter={() => {}}
-                            onMouseLeave={() => {}}
-                          >
-                            {restrictions}
+                          <td className="px-1 text-center relative select-none z-50">
+                            <p
+                              className="underline cursor-pointer"
+                              onClick={() => {
+                                if (showRestrHover == sectionCode) {
+                                  setShowRestrHover(null);
+                                } else {
+                                  setShowRestrHover(sectionCode);
+                                }
+                              }}
+                            >
+                              {restrictions}
+                            </p>
+                            {showRestrHover == sectionCode && (
+                              <div className="absolute bottom-10 left-5 -translate-x-1/2 text-center p-1 bg-slate-200 bg-opacity-90 rounded-lg w-64">
+                                <ul className="text-sm gray-400 font-semibold">
+                                  {parseRestriction(restrictions).map(
+                                    (restrString: string) => (
+                                      <li>{restrString}</li>
+                                    )
+                                  )}
+                                </ul>
+                              </div>
+                            )}
                           </td>
                           <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}

@@ -8,6 +8,7 @@ type Props = {
 };
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useLocalStorage } from "react-use";
 
 const sampleCards = [
   "Current Plan",
@@ -24,6 +25,10 @@ const SavedPlans = (props: Props) => {
   const [userSession, setuserSession] = useState<any>(null);
   const [numPlans, setNumPlans] = useState(0);
   const termId = "d26e7668-b92a-4afb-a3f6-7391ec88b637";
+  const [autoEnroll, setAutoEnroll, removeAutoEnroll] = useLocalStorage(
+    "autoenroll",
+    ""
+  );
 
   const router = useRouter();
 
@@ -43,7 +48,6 @@ const SavedPlans = (props: Props) => {
               .then((result: any) => {
                 const path = "/plan?id=" + result.data.at(-1).id;
                 router.push(path);
-
               });
           });
       }
@@ -63,7 +67,19 @@ const SavedPlans = (props: Props) => {
             .then((result: any) => {
               if (result.data && result.data.length > 0) {
                 setNumPlans(result.data.length);
-                setPlans(result.data);
+                const planArray = result.data;
+
+                let autoEnrolledPlan = null;
+
+                let sortedPlans = planArray.filter((plan: any) => {
+                  if (plan.id !== autoEnroll) {
+                    return true;
+                  }
+                  autoEnrolledPlan = plan;
+                  return false;
+                });
+
+                setPlans([autoEnrolledPlan, ...sortedPlans]);
               }
             });
         }
@@ -98,6 +114,7 @@ const SavedPlans = (props: Props) => {
                     key={plan.id}
                     // @ts-ignore
                     cardId={plan?.id}
+                    isAutoEnrolled={plan.id === autoEnroll}
                   />
                 );
               }
