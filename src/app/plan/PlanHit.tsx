@@ -300,8 +300,8 @@ const Hit = ({ hit, setPlanCourses, setSectionHover, sectionHover }: props) => {
                               <div className="absolute bottom-10 left-5 -translate-x-1/2 text-center p-1 bg-slate-200 bg-opacity-90 rounded-lg w-64">
                                 <ul className="text-sm gray-400 font-semibold">
                                   {parseRestriction(restrictions).map(
-                                    (restrString: string) => (
-                                      <li>{restrString}</li>
+                                    (restrString: string, i: number) => (
+                                      <li key={i}>{restrString}</li>
                                     )
                                   )}
                                 </ul>
