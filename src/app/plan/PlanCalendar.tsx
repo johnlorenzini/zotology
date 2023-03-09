@@ -136,7 +136,7 @@ const PlanCalendar = ({ events, sectionHover }: Props) => {
   }, [events]);
 
   return (
-    <div className="scrollbar-hide w-full h-screen flex flex-col overflow-x-scroll">
+    <div className="scrollbar-hide w-full h-[48rem] flex flex-col overflow-x-scroll">
       <div className="w-full h-full">
         <Schedule events={calendarEvents} />
       </div>

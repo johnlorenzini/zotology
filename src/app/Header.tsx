@@ -8,7 +8,7 @@ import UserNav from "./UserNav";
 
 const Header = () => {
   return (
-    <header className="sticky flex justify-center font-body py-2 top-0 z-40 w-full bg-gradient-to-l from-[#0064a4] to-[#1b3d6d] drop-shadow-lg">
+    <header className="sticky flex justify-center font-body py-2 top-0 z-50 w-full bg-gradient-to-l from-[#0064a4] to-[#1b3d6d] drop-shadow-lg">
       <div className="max-w-7xl px-10 lg:px-8 flex justify-between w-full h-full">
         <Nav items={siteConfig.mainNav} />
         <div className="flex items-center justify-end flex-1 space-x-4 ">

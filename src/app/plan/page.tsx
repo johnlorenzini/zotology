@@ -261,40 +261,47 @@ export default function Home() {
                   </button>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <input
                   type="checkbox"
                   name="autoenroll"
                   id="autoenrollbox"
+                  className="w-4 h-4 accent-uciyellow color-white"
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     if (isChecked == true) {
                       console.log("removing auto enroll");
                       setAutoEnroll("");
                       setIsChecked(false);
 
-                      toast.success("Plan removed from auto-enroll", {
-                        position: "top-right",
-                        autoClose: 1500,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Slide,
-                      });
+                      toast.success(
+                        `Plan "${text}" will no longer auto-enroll`,
+                        {
+                          position: "top-right",
+                          autoClose: 1500,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          progress: undefined,
+                          theme: "light",
+                          transition: Slide,
+                        }
+                      );
                     } else {
                       setIsChecked(true);
                       console.log("auto enrolling");
                       setAutoEnroll(data ?? "");
 
-                      toast.success(`Auto enrolling plan "${text}"`, {
-                        position: "top-right",
-                        autoClose: 1500,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Slide,
-                      });
+                      toast.success(
+                        `Plan "${text}" will be automatically enrolled during your registration window.`,
+                        {
+                          position: "top-right",
+                          autoClose: 3000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          progress: undefined,
+                          theme: "light",
+                          transition: Slide,
+                        }
+                      );
                     }
                   }}
                   // default checked state

@@ -5,10 +5,17 @@ import { Schedule, Event } from "./Schedule";
 import { parseTime } from "@/lib/section/utils/parseTime";
 import { CourseSection } from "./siteConfig";
 
-import { hashStringToColor } from "@/lib/section/utils/stringColorHash"
+import { hashStringToColor } from "@/lib/section/utils/stringColorHash";
+
+import { BsFullscreen, BsFullscreenExit } from "react-icons/bs";
+import { motion } from "framer-motion";
+
+import cn from "classnames";
 
 type Props = {
   events: Array<CourseSection>;
+  setCalendarFull: React.Dispatch<React.SetStateAction<boolean>>;
+  calendarFull: boolean;
 };
 
 // [
@@ -25,15 +32,15 @@ type Props = {
 //   { time: 18.5, duration: 0.833, day: 2, course: "ICS 53 Lab" },
 // ];
 
-const CalendarView = ({ events }: Props) => {
+const CalendarView = ({ events, calendarFull, setCalendarFull }: Props) => {
   let [calendarEvents, setCalendarEvents] = useState<Array<Event>>([]);
 
   var parsedEvents: Array<Event> = [];
 
   useEffect(() => {
-
     events.forEach((evt) => {
-      const { meetings, courseTitle, courseFull, sectionType, sectionCode } = evt;
+      const { meetings, courseTitle, courseFull, sectionType, sectionCode } =
+        evt;
 
       const location = meetings[0]?.bldg;
       const timeString = `${meetings[0]?.days} ${meetings[0]?.time}`;
@@ -69,12 +76,28 @@ const CalendarView = ({ events }: Props) => {
   }, [events]);
 
   return (
-    <div className="scrollbar-hide w-full h-full flex flex-col overflow-x-scroll">
+    <div
+      className={cn(
+        "scrollbar-hide w-full flex flex-col overflow-x-scroll relative h-[50rem]",
+        calendarFull ? "h-[70rem]" : "h-[60rem]"
+      )}
+    >
       {/* Title */}
-      <div className="w-full p-5 pb-[10px] z-10 bg-white">
-        <h3 className="text-2xl font-semibold text-cardtitle font-title">
+      <div className="w-full p-5 flex justify-between pb-[10px] z-10 bg-white sticky top-0">
+        <motion.h3
+          layout="position"
+          className="text-2xl font-semibold text-cardtitle font-title"
+        >
           Your Schedule
-        </h3>
+        </motion.h3>
+        <button
+          onClick={() => {
+            setCalendarFull((calendarFull: boolean) => !calendarFull);
+          }}
+          className="hidden lg:block"
+        >
+          {calendarFull ? <BsFullscreenExit /> : <BsFullscreen />}
+        </button>
       </div>
       {/* Calendar Wrapper */}
       <div className="w-full h-full">

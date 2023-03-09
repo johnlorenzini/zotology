@@ -19,7 +19,7 @@ const PlanCard = ({ title, cardId, isAutoEnrolled }: Props) => {
       className={cn(
         "py-2 w-full h-1/3 items-center rounded-xl px-4 text-left flex justify-between border-2 border-[#e8e8e5]",
         isAutoEnrolled
-          ? "bg-gradient-to-r from-[rgba(255,210,0,0.8)] to-[rgba(247,183,45,0.8)] bg-opacity-"
+          ? "bg-gradient-to-r from-[rgba(255,210,0,0.7)] to-[rgba(247,183,45,0.7)]"
           : "bg-[#f9f9f8]"
       )}
     >

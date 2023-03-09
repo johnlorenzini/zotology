@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { supabase } from "@/lib/supabase/utils/supabase-secret";
 
@@ -8,6 +8,7 @@ import CalendarView from "../CalendarView";
 
 import { sampleWaitlist } from "../siteConfig";
 import { useUserContext } from "../SectionsContext";
+import { motion } from "framer-motion";
 
 type Props = {};
 
@@ -18,6 +19,8 @@ interface DateInfo {
 
 const CourseView = ({}: Props) => {
   const { courseContext, setCourseContext } = useUserContext();
+
+  const [calendarFull, setCalendarFull] = useState<boolean>(false);
 
   useEffect(() => {
     async function retrieveCourses() {
@@ -36,7 +39,7 @@ const CourseView = ({}: Props) => {
 
             let sectionsLength = sectionArray?.length ?? 0;
 
-            if (sectionsLength > 0) {              
+            if (sectionsLength > 0) {
               supabase
                 .from("sections")
                 .select()
@@ -60,9 +63,40 @@ const CourseView = ({}: Props) => {
         <ListView events={courseContext} waitlist={sampleWaitlist} />
       </div>
       {/* Calendar View */}
-      <div className="card col-span-12 sm:col-span-12 lg:col-span-6 h-[60rem] overflow-hidden">
-        <CalendarView events={courseContext} />
-      </div>
+      {calendarFull && (
+        <div className="fixed top-14 left-0 flex justify-center items-center w-screen h-[calc(100vh-56px)] z-40">
+          <div
+            className="absolute left-0 top-0 w-full h-full bg-slate-300 bg-opacity-30 z-0"
+            onClick={() => {
+              setCalendarFull(false);
+            }}
+          />
+          <motion.div
+            layout
+            className="card w-[80%] h-[90%] overflow-y-scroll max-w-5xl gray-scrollbar z-10 relative bg-white"
+            layoutId="calendar"
+          >
+            <CalendarView
+              events={courseContext}
+              setCalendarFull={setCalendarFull}
+              calendarFull={calendarFull}
+            />
+          </motion.div>
+        </div>
+      )}
+      {!calendarFull && (
+        <motion.div
+          layout
+          className="card col-span-12 sm:col-span-12 lg:col-span-6 overflow-hidden z-20 relative"
+          layoutId="calendar"
+        >
+          <CalendarView
+            events={courseContext}
+            setCalendarFull={setCalendarFull}
+            calendarFull={calendarFull}
+          />
+        </motion.div>
+      )}
     </>
   );
 };
