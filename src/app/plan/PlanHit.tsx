@@ -22,16 +22,16 @@ import { useSearchParams } from "next/navigation";
 
 import { HoverSection } from "./PlanCalendar";
 
+import { parseRestriction } from "@/lib/section/utils/parseRestriction";
+
 type props = {
   hit: any;
   setPlanCourses: React.Dispatch<SetStateAction<CourseSection[]>>;
-  setSectionHover: React.Dispatch<SetStateAction<HoverSection|null>>;
-  sectionHover: HoverSection|null;
+  setSectionHover: React.Dispatch<SetStateAction<HoverSection | null>>;
+  sectionHover: HoverSection | null;
 };
 
 const Hit = ({ hit, setPlanCourses, setSectionHover, sectionHover }: props) => {
-  const [session, setSession] = useState(null);
-
   // async function getClasses(){
   //   const {data: {session}} = await supabase.auth.getSession();
   //   if(session){
@@ -47,6 +47,8 @@ const Hit = ({ hit, setPlanCourses, setSectionHover, sectionHover }: props) => {
   //     }
   //   }
   // }
+
+  const [showRestrHover, setShowRestrHover] = useState<string | null>(null);
 
   async function handleUnenroll(courseCode: string) {
     const {
@@ -281,7 +283,31 @@ const Hit = ({ hit, setPlanCourses, setSectionHover, sectionHover }: props) => {
                               {instructors[0]}
                             </Highlight>
                           </td>
-                          <td className="px-1 text-center">{restrictions}</td>
+                          <td className="px-1 text-center relative select-none z-50">
+                            <p
+                              className="underline cursor-pointer"
+                              onClick={() => {
+                                if (showRestrHover == sectionCode) {
+                                  setShowRestrHover(null);
+                                } else {
+                                  setShowRestrHover(sectionCode);
+                                }
+                              }}
+                            >
+                              {restrictions}
+                            </p>
+                            {showRestrHover == sectionCode && (
+                              <div className="absolute bottom-10 left-5 -translate-x-1/2 text-center p-1 bg-slate-200 bg-opacity-90 rounded-lg w-64">
+                                <ul className="text-sm gray-400 font-semibold">
+                                  {parseRestriction(restrictions).map(
+                                    (restrString: string, i: number) => (
+                                      <li key={i}>{restrString}</li>
+                                    )
+                                  )}
+                                </ul>
+                              </div>
+                            )}
+                          </td>
                           <td className="px-1 text-center">
                             {numCurrentlyEnrolled.totalEnrolled} / {maxCapacity}
                           </td>
@@ -294,33 +320,30 @@ const Hit = ({ hit, setPlanCourses, setSectionHover, sectionHover }: props) => {
                             )}
                             onMouseEnter={() => {
                               if (!sectionHover?.visible) {
-                                setSectionHover(
-                                  (sectionHover) => {
-                                    return {
-                                      course: `${deptCode} ${courseNumber}`,
-                                      sectionType: sectionType,
-                                      location: meetings[0]?.bldg,
-                                      time: `${meetings[0]?.days} ${meetings[0]?.time}`,
-                                      sectionCode: sectionCode,
-                                      visible: true
-                                    }
+                                setSectionHover((sectionHover) => {
+                                  return {
+                                    course: `${deptCode} ${courseNumber}`,
+                                    sectionType: sectionType,
+                                    location: meetings[0]?.bldg,
+                                    time: `${meetings[0]?.days} ${meetings[0]?.time}`,
+                                    sectionCode: sectionCode,
+                                    visible: true,
+                                  };
                                 });
                               }
                             }}
                             onMouseLeave={() => {
                               if (sectionHover != null) {
-                                setSectionHover(
-                                  (sectionHover: any) => {
-                                    return {
-                                      course: sectionHover?.course,
-                                      sectionType: sectionHover?.sectionType,
-                                      location: sectionHover?.location,
-                                      time: sectionHover?.time,
-                                      sectionCode: sectionHover?.sectionCode,
-                                      visible: false
-                                    }
-                                  }
-                                );  
+                                setSectionHover((sectionHover: any) => {
+                                  return {
+                                    course: sectionHover?.course,
+                                    sectionType: sectionHover?.sectionType,
+                                    location: sectionHover?.location,
+                                    time: sectionHover?.time,
+                                    sectionCode: sectionHover?.sectionCode,
+                                    visible: false,
+                                  };
+                                });
                               }
                             }}
                           >
@@ -328,7 +351,7 @@ const Hit = ({ hit, setPlanCourses, setSectionHover, sectionHover }: props) => {
                               onClick={() => {
                                 handleSubmit(sectionCode);
                               }}
-                              className="px-3 py-1 text-sm bg-blue-200 border-2 border-blue-700 font-semibold rounded-xl hover:bg-blue-700 transition ease-in-out"
+                              className="px-3 py-1 text-sm bg-blue-200 border-2 border-uciblue font-semibold rounded-xl hover:bg-uciblue hover:text-white transition ease-in-out"
                             >
                               Plan
                             </button>

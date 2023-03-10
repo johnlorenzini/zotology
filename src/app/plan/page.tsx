@@ -1,11 +1,8 @@
 "use client";
 import { supabase } from "@/lib/supabase/utils/supabase-secret";
-import { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import PlanSearchWrapper from "./PlanSearchWrapper";
-import FuzzySearch from "../FuzzySearch";
-import ListView, { EnrolledView } from "../ListView";
 import { useSearchParams } from "next/navigation";
-import { sampleEvents, sampleWaitlist } from "../siteConfig";
 import { Slide, Zoom, Flip, Bounce } from "react-toastify";
 import PlanList from "../PlanList";
 
@@ -24,14 +21,19 @@ import "react-toastify/dist/ReactToastify.css";
 import PlanSearch from "./PlanSearch";
 import PlanCalendar from "./PlanCalendar";
 
-import { HoverSection } from "./PlanCalendar"
+import { HoverSection } from "./PlanCalendar";
+import { useLocalStorage } from "react-use";
+
+// import FuzzySearch from "../FuzzySearch";
+// import ListView, { EnrolledView } from "../ListView";
+// import { sampleEvents, sampleWaitlist } from "../siteConfig";
 
 export default function Home() {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const inputRef = useRef(null);
-  const [sectionHover, setSectionHover] = useState<HoverSection|null>(null);
+  const [sectionHover, setSectionHover] = useState<HoverSection | null>(null);
 
   const searchParams = useSearchParams();
   const data = searchParams.get("id");
@@ -42,6 +44,12 @@ export default function Home() {
   const [planCourses, setPlanCourses] = useState<Array<CourseSection>>([]);
 
   const [currentView, setCurrentView] = useState<boolean>(true);
+
+  const [autoEnroll, setAutoEnroll, removeAutoEnroll] = useLocalStorage(
+    "autoenroll",
+    ""
+  );
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleToggleView = () => {
     setCurrentView(!currentView);
@@ -125,10 +133,10 @@ export default function Home() {
                 });
             }
           });
+        setIsChecked(data === autoEnroll);
       }
     }
-    retrievePlan().then(() => {
-    });
+    retrievePlan().then(() => {});
   }, [data]);
 
   // useEffect(() => {
@@ -181,68 +189,138 @@ export default function Home() {
           <div className="flex-grow grid grid-flow-row-dense gap-6 font-body grid-cols-12 w-full px-10">
             {/* Left: search to add classes */}
             <div className="card col-span-12 lg:col-span-6 p-5">
-              <PlanSearchWrapper setPlanCourses={setPlanCourses} setSectionHover={setSectionHover} sectionHover={sectionHover}/>
+              <PlanSearchWrapper
+                setPlanCourses={setPlanCourses}
+                setSectionHover={setSectionHover}
+                sectionHover={sectionHover}
+              />
             </div>
             {/* Right: edit current plan */}
             <div className="card col-span-12 lg:col-span-6 p-5">
               <div className="flex flex-col md:flex-row gap-3 max-w-full overflow-ellipsis">
                 <div className="flex max-w-full md:max-w-[75%] lg:max-w-[60%]">
+                  {isEditing ? (
+                    <>
+                      <input
+                        type="text"
+                        value={text}
+                        onChange={handleInputChange}
+                        onKeyDown={handleEnterKey}
+                        className="md:py-2 text-2xl font-semibold text-cardtitle font-title focus:outline-none border-b-2 border-gray-400"
+                        // @ts-ignore
+                        onBlur={() => (inputRef.current.style.width = "")}
+                        ref={inputRef}
+                        style={{
+                          minWidth: "50px",
+                          // @ts-ignore
+                          width: `${inputRef.current?.scrollWidth}px`,
+                        }}
+                      />
+                      <button
+                        onClick={handleClick}
+                        className="text-2xl text-uciblue"
+                      >
+                        <RiCheckboxCircleLine />
+                      </button>
+                    </>
+                  ) : (
+                    <div className="flex items-center max-w-full">
+                      <h3
+                        onClick={handleClick}
+                        className="text-2xl font-semibold text-cardtitle font-title truncate"
+                      >
+                        {text}
+                      </h3>
+                      <button
+                        onClick={handleClick}
+                        className="text-2xl text-uciblue"
+                      >
+                        <RiEdit2Fill />
+                      </button>
+                    </div>
+                  )}
 
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={text}
-                    onChange={handleInputChange}
-                    onKeyDown={handleEnterKey}
-                    className="md:py-2 text-2xl font-semibold text-cardtitle font-title focus:outline-none border-b-2 border-gray-400"
-                    // @ts-ignore
-                    onBlur={() => (inputRef.current.style.width = "")}
-                    ref={inputRef}
-                    style={{
-                      minWidth: "50px",
-                      // @ts-ignore
-                      width: `${inputRef.current?.scrollWidth}px`,
-                    }}
-                  />
-                ) : (
-                  <h3
-                    onClick={handleClick}
-                    className="md:py-2 text-2xl font-semibold text-cardtitle font-title truncate"
-                  >
-                    {text}
-                  </h3>
-                )}
-                <button onClick={handleClick} className="text-2xl text-uciblue">
-                  {isEditing ? <RiCheckboxCircleLine /> : <RiEdit2Fill />}{" "}
-                </button>
-                {isEditing && (
-                  <button
-                  onClick={() => {
-                    setIsEditing(false);
-                    setText(planData?.data?.at(0)?.name);
-                  }}
-                  className="text-2xl text-rose-500"
-                  >
-                    <RiCloseCircleLine />
-                  </button>
-                )}
+                  {isEditing && (
+                    <button
+                      onClick={() => {
+                        setIsEditing(false);
+                        setText(planData?.data?.at(0)?.name);
+                      }}
+                      className="text-2xl text-rose-500"
+                    >
+                      <RiCloseCircleLine />
+                    </button>
+                  )}
                 </div>
-                <div className="flex justify-center items-center md:justify-end w-full">
-
+                <div className="flex flex-col justify-center items-end md:justify-end w-full">
                   <button
-                  className="bg-[#f3f3f2] border-2 border-[#e7e7e5] px-4 py-1 rounded-md h-10 w-[10rem] "
-                  onClick={handleToggleView}
+                    className="bg-[#f3f3f2] border-2 border-[#e7e7e5] px-4 py-1 rounded-md h-10 w-[10rem] "
+                    onClick={handleToggleView}
                   >
-                  {currentView ? "Calendar View" : "List View"}
+                    {currentView ? "Calendar View" : "List View"}
                   </button>
                 </div>
               </div>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="checkbox"
+                  name="autoenroll"
+                  id="autoenrollbox"
+                  className="w-4 h-4 accent-uciyellow color-white"
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    if (isChecked == true) {
+                      console.log("removing auto enroll");
+                      setAutoEnroll("");
+                      setIsChecked(false);
+
+                      toast.success(
+                        `Plan "${text}" will no longer auto-enroll`,
+                        {
+                          position: "top-right",
+                          autoClose: 1500,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          progress: undefined,
+                          theme: "light",
+                          transition: Slide,
+                        }
+                      );
+                    } else {
+                      setIsChecked(true);
+                      console.log("auto enrolling");
+                      setAutoEnroll(data ?? "");
+
+                      toast.success(
+                        `Plan "${text}" will be automatically enrolled during your registration window.`,
+                        {
+                          position: "top-right",
+                          autoClose: 3000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          progress: undefined,
+                          theme: "light",
+                          transition: Slide,
+                        }
+                      );
+                    }
+                  }}
+                  // default checked state
+                  checked={isChecked}
+                />
+                <p>Auto-Enroll</p>
+              </div>
               <div className="h-full">
                 {currentView ? (
-                  <PlanList events={planCourses} setPlanCourses={setPlanCourses} />) : (
-                    <PlanCalendar events={planCourses} sectionHover={sectionHover}/>
-                  )
-                  }
+                  <PlanList
+                    events={planCourses}
+                    setPlanCourses={setPlanCourses}
+                  />
+                ) : (
+                  <PlanCalendar
+                    events={planCourses}
+                    sectionHover={sectionHover}
+                  />
+                )}
               </div>
             </div>
           </div>
